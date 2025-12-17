@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "postcss": "^8.5.6",
+    "postcss-nested": "^7.0.2",
     "vite": "^7.2.4"
   },
   "dependencies": {

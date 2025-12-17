@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import handlebars from "vite-plugin-handlebars";
 
 export default defineConfig({
@@ -6,5 +6,5 @@ export default defineConfig({
         port: 3000,
         open: true,
     },
-    plugins: [handlebars()]
+    plugins: [handlebars()],
 });
