@@ -1,0 +1,1 @@
+export { default as MainPageTemplate } from './main-page.hbs?raw';
