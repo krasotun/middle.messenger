@@ -1,1 +1,1 @@
-export { default as MainPageTemplate } from './main-page.hbs?raw';
+export {default} from './main-page.hbs';
