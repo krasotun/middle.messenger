@@ -1,3 +1,4 @@
+import {renderTempNav} from './components/temp-nav/temp-nav.js';
 import SignInPageTemplate from "./pages/sign-in-page/index.js";
 
 
@@ -13,7 +14,7 @@ export class App {
     }
 
     _renderApp(appContainer) {
-        appContainer.innerHTML = SignInPageTemplate({title: 'Hello world'});
+        appContainer.innerHTML = renderTempNav() + SignInPageTemplate({title: 'Hello world'});
     }
 
     _throwRenderError() {

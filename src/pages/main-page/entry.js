@@ -1,4 +1,5 @@
 import '../../styles/styles.css';
+import {renderTempNav} from '../../components/temp-nav/temp-nav.js';
 import MainPage from './index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,5 +9,5 @@ document.addEventListener('DOMContentLoaded', () => {
     throw new Error('Container with id="app" not found! Please, create it');
   }
 
-  appContainer.innerHTML = MainPage({});
+  appContainer.innerHTML = renderTempNav() + MainPage({});
 });

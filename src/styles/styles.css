@@ -132,6 +132,38 @@ body {
   }
 }
 
+.temp-nav {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e6ea;
+  background: #fff;
+
+  &__title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__link {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #eef2f7;
+    color: #1f2a37;
+    font-size: 12px;
+    text-decoration: none;
+
+    &:hover {
+      background: #e2e8f0;
+    }
+  }
+}
+
 .error {
   min-height: 0;
   display: flex;
