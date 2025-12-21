@@ -1,4 +1,3 @@
-import {renderTempNav} from './components/temp-nav/temp-nav.js';
 import SignInPageTemplate from "./pages/sign-in-page/index.js";
 
 
@@ -14,8 +13,7 @@ export class App {
     }
 
     _renderApp(appContainer) {
-        // Temporary navigation: remove after routing is added.
-        appContainer.innerHTML = renderTempNav() + SignInPageTemplate({title: 'Hello world'});
+        appContainer.innerHTML = SignInPageTemplate({title: 'Hello world'});
     }
 
     _throwRenderError() {
