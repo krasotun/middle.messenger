@@ -1,5 +1,6 @@
 import '../../styles/styles.css';
 import ServerErrorPage from './index.js';
+import {renderTempNav} from '../../components/temp-nav/temp-nav.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const appContainer = document.getElementById('app');
@@ -8,5 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     throw new Error('Container with id="app" not found! Please, create it');
   }
 
-  appContainer.innerHTML = ServerErrorPage({});
+  // Temporary navigation: remove after routing is added.
+  appContainer.innerHTML = renderTempNav() + ServerErrorPage({});
 });
