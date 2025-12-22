@@ -29,12 +29,6 @@ body {
   min-height: 100vh;
 }
 
-#app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .auth {
   --button-color: #3aa0ff;
   --button-color-hover: #2b8cf0;
@@ -102,7 +96,7 @@ body {
     }
   }
 
-  &__button--secondary {
+  &__button_secondary {
     border: 1px solid #d0d4d9;
     background: transparent;
     color: #2b2f33;
@@ -287,7 +281,7 @@ body {
     column-gap: 10px;
     align-items: start;
 
-    &--active {
+    &_active {
       background: #e7f2ff;
       border: 1px solid #cfe4ff;
     }
@@ -306,7 +300,7 @@ body {
     justify-content: space-between;
     gap: 8px;
 
-    &--meta {
+    &_meta {
       align-items: flex-end;
     }
   }
@@ -359,7 +353,7 @@ body {
     border-bottom: 1px solid #e2e6ea;
   }
 
-  &__chat-avatar--large {
+  &__chat-avatar_large {
     align-self: center;
   }
   &__chat-title {
@@ -398,12 +392,12 @@ body {
     flex-direction: column;
     gap: 6px;
 
-    &--incoming {
+    &_incoming {
       align-self: flex-start;
       color: #1f2a37;
     }
 
-    &--outgoing {
+    &_outgoing {
       align-self: flex-end;
       background: #d9ecff;
       color: #0f172a;
@@ -435,7 +429,7 @@ body {
     align-self: center;
   }
 
-  &__chat-avatar--large {
+  &__chat-avatar_large {
     width: 40px;
     height: 40px;
   }
