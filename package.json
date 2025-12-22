@@ -1,0 +1,23 @@
+{
+  "name": "middle.messenger",
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": " rm -rf dist && npm run build && npm run preview"
+  },
+  "devDependencies": {
+    "@yoichiro/vite-plugin-handlebars": "^1.4.0",
+    "postcss": "^8.5.6",
+    "postcss-nested": "^7.0.2",
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  }
+}

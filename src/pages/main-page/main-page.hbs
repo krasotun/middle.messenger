@@ -1,0 +1,73 @@
+<section class="messenger">
+    <aside class="messenger__sidebar">
+        <div class="messenger__search">
+            <img class="messenger__search-icon" src="/static/icons/search.svg" alt="Иконка поиска">
+            <input class="messenger__search-input" type="text" placeholder="Поиск">
+        </div>
+        <h1 class="messenger__title">Чаты</h1>
+        <ul class="messenger__chat-list">
+            <li class="messenger__chat-item messenger__chat-item_active">
+                <div class="messenger__chat-avatar" aria-hidden="true"></div>
+                <div class="messenger__chat-content">
+                    <div class="messenger__chat-row">
+                        <div class="messenger__chat-name">Андрей</div>
+                        <div class="messenger__chat-time">12:45</div>
+                    </div>
+                    <div class="messenger__chat-row messenger__chat-row_meta">
+                        <div class="messenger__chat-preview">Привет! Как дела?</div>
+                        <div class="messenger__chat-unread">2</div>
+                    </div>
+                </div>
+            </li>
+            <li class="messenger__chat-item">
+                <div class="messenger__chat-avatar" aria-hidden="true"></div>
+                <div class="messenger__chat-content">
+                    <div class="messenger__chat-row">
+                        <div class="messenger__chat-name">Команда</div>
+                        <div class="messenger__chat-time">10:12</div>
+                    </div>
+                    <div class="messenger__chat-row messenger__chat-row_meta">
+                        <div class="messenger__chat-preview">Созвон в 15:00</div>
+                        <div class="messenger__chat-unread">5</div>
+                    </div>
+                </div>
+            </li>
+            <li class="messenger__chat-item">
+                <div class="messenger__chat-avatar" aria-hidden="true"></div>
+                <div class="messenger__chat-content">
+                    <div class="messenger__chat-row">
+                        <div class="messenger__chat-name">Поддержка</div>
+                        <div class="messenger__chat-time">Вчера</div>
+                    </div>
+                    <div class="messenger__chat-row messenger__chat-row_meta">
+                        <div class="messenger__chat-preview">Ваш тикет в работе</div>
+                        <div class="messenger__chat-unread">1</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </aside>
+    <div class="messenger__chat">
+        <div class="messenger__chat-header">
+            <div class="messenger__chat-avatar messenger__chat-avatar_large" aria-hidden="true"></div>
+            <div class="messenger__chat-header-content">
+                <div class="messenger__chat-title">Андрей</div>
+                <div class="messenger__chat-status">в сети</div>
+            </div>
+        </div>
+        <div class="messenger__chat-body">
+            <div class="messenger__message messenger__message_incoming">
+                <div class="messenger__message-text">Привет! Как дела?</div>
+                <div class="messenger__message-time">12:46</div>
+            </div>
+            <div class="messenger__message messenger__message_outgoing">
+                <div class="messenger__message-text">Все отлично, спасибо!</div>
+                <div class="messenger__message-time">12:47</div>
+            </div>
+        </div>
+        <div class="messenger__chat-input">
+            <input class="messenger__input" type="text" placeholder="Сообщение">
+            <button class="messenger__send" type="button">Отправить</button>
+        </div>
+    </div>
+</section>
