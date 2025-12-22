@@ -1,6 +1,8 @@
 import '../../styles/styles.css';
-import {renderTempNav} from '../../components/temp-nav/temp-nav.js';
-import NotFoundPage from './index.js';
+
+import renderTempNav from '../../components/temp-nav/temp-nav.ts';
+
+import SignUpPage from './index';
 
 document.addEventListener('DOMContentLoaded', () => {
   const appContainer = document.getElementById('app');
@@ -9,5 +11,5 @@ document.addEventListener('DOMContentLoaded', () => {
     throw new Error('Container with id="app" not found! Please, create it');
   }
 
-  appContainer.innerHTML = renderTempNav() + NotFoundPage({});
+  appContainer.innerHTML = renderTempNav() + SignUpPage({});
 });

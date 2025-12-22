@@ -66,7 +66,12 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
   min-height: 100vh;
 }
 
@@ -209,7 +214,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 32px;
-  background: linear-gradient(135deg, var(--color-surface-error-start) 0%, var(--color-surface-error-end) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface-error-start) 0%,
+    var(--color-surface-error-end) 100%
+  );
   flex: 1;
 
   &__content {

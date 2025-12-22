@@ -1,6 +1,8 @@
 import '../../styles/styles.css';
-import {renderTempNav} from '../../components/temp-nav/temp-nav.js';
-import MainPage from './index.js';
+
+import renderTempNav from '../../components/temp-nav/temp-nav.ts';
+
+import MainPage from './index';
 
 document.addEventListener('DOMContentLoaded', () => {
   const appContainer = document.getElementById('app');

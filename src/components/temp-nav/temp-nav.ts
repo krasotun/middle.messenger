@@ -1,5 +1,5 @@
 // Temporary navigation: remove after routing is added.
-export const renderTempNav = () => `
+export default (): string => `
 <!-- Temporary navigation: remove after routing is added. -->
 <nav class="temp-nav" aria-label="Временная навигация">
   <div class="temp-nav__title">Страницы (временно)</div>
