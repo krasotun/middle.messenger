@@ -1,3 +1,5 @@
+import { v4 as makeUUID } from 'uuid';
+
 import { EventBus } from './EventBus.ts';
 
 const enum Block_Events {
@@ -7,16 +9,22 @@ const enum Block_Events {
   FLOW_RENDER = 'flow:render',
 }
 
-type Props = Record<string, unknown> & {
+export type BlockProps = Record<string, unknown> & {
   events?: Record<string, EventListenerOrEventListenerObject>;
+  settings?: { withInternalID?: boolean };
+  __id?: string;
 };
 
-export abstract class Block<P extends Props = Props> {
+export abstract class Block<P extends BlockProps = BlockProps> {
   private readonly _eventBus = new EventBus();
 
   private _element: HTMLElement | null = null;
 
+  private readonly _id: string | null;
+
   protected props: P;
+
+  protected children: Record<string, Block> = {};
 
   get element(): HTMLElement {
     if (!this._element) {
@@ -25,8 +33,18 @@ export abstract class Block<P extends Props = Props> {
     return this._element;
   }
 
-  constructor(props = {} as P) {
-    this.props = this._makePropsProxy(props);
+  constructor(propsAndChildren = {} as P) {
+    const { children, props } = this._getChildren(propsAndChildren);
+
+    this.children = children;
+
+    const withId = props.settings?.withInternalID;
+
+    this._id = withId ? makeUUID() : null;
+    this.props = this._makePropsProxy({
+      ...props,
+      ...(withId ? { __id: this._id } : {}),
+    } as P);
 
     this._registerEvents();
     this._eventBus.emit(Block_Events.INIT);
@@ -74,6 +92,9 @@ export abstract class Block<P extends Props = Props> {
     }
 
     this._element = nextElement as HTMLElement;
+    if (this._id) {
+      this._element.setAttribute('data-block-id', this._id);
+    }
 
     this._addEventListeners();
   }
@@ -116,5 +137,26 @@ export abstract class Block<P extends Props = Props> {
         throw new Error('нет доступа');
       },
     });
+  }
+
+  private _getChildren(propsAndChildren: P): {
+    children: Record<string, Block>;
+    props: P;
+  } {
+    const children: Record<string, Block> = {};
+
+    const props: Record<string, unknown> = {};
+
+    const isBlock = (value: unknown): value is Block => value instanceof Block;
+
+    Object.entries(propsAndChildren).forEach(([key, value]) => {
+      if (isBlock(value)) {
+        children[key] = value;
+      } else {
+        props[key] = value;
+      }
+    });
+
+    return { children, props: props as P };
   }
 }
