@@ -5,14 +5,15 @@ import './Button.css';
 
 type ButtonProps = BlockProps & {
   title: string;
+  type: 'button' | 'submit' | 'reset';
   events: {
     click: (event: Event) => void;
   };
+  disabled?: boolean;
 };
 
 export class Button extends Block<ButtonProps> {
-  render(): string {
-    console.log(this);
-    return template(this.props);
+  render(): DocumentFragment {
+    return this.renderTemplate(template);
   }
 }

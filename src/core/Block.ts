@@ -50,9 +50,9 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this._eventBus.emit(Block_Events.INIT);
   }
 
-  abstract render(): string;
+  abstract render(): DocumentFragment;
 
-  setProps = (nextProps: P) => {
+  setProps = (nextProps: Partial<P>) => {
     Object.assign(this.props, nextProps);
   };
 
@@ -60,28 +60,51 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this._eventBus.emit(Block_Events.FLOW_CDM);
   }
 
+  protected renderTemplate(
+    template: (context?: Record<string, unknown>) => string,
+    props: Record<string, unknown> = this.props,
+  ): DocumentFragment {
+    return this._compile(template, props);
+  }
+
+  protected componentDidMount() {}
+
+  protected componentDidUpdate(_oldProps: P, _newProps: P): boolean {
+    return true;
+  }
+
   private _init() {
     this._eventBus.emit(Block_Events.FLOW_RENDER);
   }
 
-  private _componentDidMount() {}
+  private _componentDidMount() {
+    this.componentDidMount();
 
-  private _componentDidUpdate() {
-    this._eventBus.emit(Block_Events.FLOW_RENDER);
+    Object.values(this.children).forEach((child) => {
+      child.dispatchComponentDidMount();
+    });
+  }
+
+  private _componentDidUpdate(oldProps: P, newProps: P) {
+    const shouldRender = this.componentDidUpdate(oldProps, newProps);
+    if (shouldRender) {
+      this._eventBus.emit(Block_Events.FLOW_RENDER);
+    }
   }
 
   private _registerEvents() {
     this._eventBus.on(Block_Events.INIT, this._init.bind(this));
     this._eventBus.on(Block_Events.FLOW_CDM, this._componentDidMount.bind(this));
-    this._eventBus.on(Block_Events.FLOW_CDU, this._componentDidUpdate.bind(this));
+    this._eventBus.on(Block_Events.FLOW_CDU, (...args) => {
+      const [oldProps, newProps] = args as [P, P];
+      this._componentDidUpdate(oldProps, newProps);
+    });
     this._eventBus.on(Block_Events.FLOW_RENDER, this._render.bind(this));
   }
 
   private _render() {
-    const template = document.createElement('template');
-    template.innerHTML = this.render().trim();
-
-    const nextElement = template.content.firstElementChild;
+    const fragment = this.render();
+    const nextElement = fragment.firstElementChild;
     if (!nextElement) {
       throw new Error('Render returned empty template');
     }
@@ -92,6 +115,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     }
 
     this._element = nextElement as HTMLElement;
+
     if (this._id) {
       this._element.setAttribute('data-block-id', this._id);
     }
@@ -128,15 +152,51 @@ export abstract class Block<P extends BlockProps = BlockProps> {
           throw new Error('Cannot set property');
         }
 
+        const oldProps = { ...(target as Record<string, unknown>) } as P;
         // eslint-disable-next-line no-param-reassign
         (target as Record<string, unknown>)[key] = value;
-        this._eventBus.emit(Block_Events.FLOW_CDU);
+        this._eventBus.emit(Block_Events.FLOW_CDU, oldProps, target);
         return true;
       },
       deleteProperty: () => {
         throw new Error('нет доступа');
       },
     });
+  }
+
+  private _getPropsAndStubs(props: Record<string, unknown>): Record<string, unknown> {
+    const propsAndStubs: Record<string, unknown> = { ...props };
+
+    Object.entries(this.children).forEach(([key, child]) => {
+      if (!child._id) {
+        throw new Error(`Child component "${key}" must have settings.withInternalID = true`);
+      }
+      propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
+    });
+
+    return propsAndStubs;
+  }
+
+  private _compile(
+    template: (context?: Record<string, unknown>) => string,
+    props: Record<string, unknown>,
+  ): DocumentFragment {
+    const propsAndStubs = this._getPropsAndStubs(props);
+    const fragment = document.createElement('template');
+    fragment.innerHTML = template(propsAndStubs);
+
+    Object.values(this.children).forEach((child) => {
+      if (!child._id) {
+        return;
+      }
+      const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
+      if (!stub) {
+        return;
+      }
+      stub.replaceWith(child.element);
+    });
+
+    return fragment.content;
   }
 
   private _getChildren(propsAndChildren: P): {

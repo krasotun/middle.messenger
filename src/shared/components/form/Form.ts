@@ -7,11 +7,11 @@ import './Form.css';
 type FormProps = {
   title: string;
   submitButton: Button;
+  submitText?: string;
 };
 
 export class Form extends Block<FormProps> {
-  render(): string {
-    console.log(this);
-    return template(this.props);
+  render(): DocumentFragment {
+    return this.renderTemplate(template);
   }
 }
