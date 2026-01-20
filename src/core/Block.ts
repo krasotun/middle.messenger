@@ -1,128 +1,120 @@
-// abstract class Block {
-//   static EVENTS = {
-//     INIT: 'init',
-//     FLOW_CDM: 'flow:component-did-mount',
-//     FLOW_CDU: 'flow:component-did-update',
-//     FLOW_RENDER: 'flow:render',
-//   };
-//
-//   _element = null;
-//   _meta = null;
-//
-//   /** JSDoc
-//    * @param {string} tagName
-//    * @param {Object} props
-//    *
-//    * @returns {void}
-//    */
-//   constructor(tagName = 'div', props = {}) {
-//     const eventBus = new EventBus();
-//     this._meta = {
-//       tagName,
-//       props,
-//     };
-//
-//     this.props = this._makePropsProxy(props);
-//
-//     this.eventBus = () => eventBus;
-//
-//     this._registerEvents(eventBus);
-//     eventBus.emit(Block.EVENTS.INIT);
-//   }
-//
-//   _registerEvents(eventBus) {
-//     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
-//     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
-//     eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
-//     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
-//   }
-//
-//   _createResources() {
-//     const { tagName } = this._meta;
-//     this._element = this._createDocumentElement(tagName);
-//     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
-//   }
-//
-//   init() {
-//     this._createResources();
-//   }
-//
-//   _componentDidMount() {
-//     this.componentDidMount();
-//   }
-//
-//   // Может переопределять пользователь, необязательно трогать
-//   componentDidMount(oldProps) {}
-//
-//   dispatchComponentDidMount() {
-//     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
-//   }
-//
-//   _componentDidUpdate(oldProps, newProps) {
-//     const response = this.componentDidUpdate(oldProps, newProps);
-//
-//     this._render();
-//   }
-//
-//   // Может переопределять пользователь, необязательно трогать
-//   componentDidUpdate(oldProps, newProps) {
-//     return true;
-//   }
-//
-//   setProps = (nextProps) => {
-//     if (!nextProps) {
-//       return;
-//     }
-//
-//     Object.assign(this.props, nextProps);
-//   };
-//
-//   get element() {
-//     return this._element;
-//   }
-//
-//   _render() {
-//     const block = this.render();
-//     // Этот небезопасный метод для упрощения логики
-//     // Используйте шаблонизатор из npm или напишите свой безопасный
-//     // Нужно не в строку компилировать (или делать это правильно),
-//     // либо сразу в DOM-элементы возвращать из compile DOM-ноду
-//     this._element.innerHTML = block;
-//   }
-//
-//   // Может переопределять пользователь, необязательно трогать
-//   render() {}
-//
-//   getContent() {
-//     return this.element;
-//   }
-//
-//   _makePropsProxy(props) {
-//     return new Proxy(props, {
-//       set: (target, key, value) => {
-//         if (!(key in target)) {
-//           throw new Error('Cannot set property');
-//         }
-//         target[key] = value;
-//         this.eventBus().emit(Block.EVENTS.FLOW_CDU);
-//         return true;
-//       },
-//       deleteProperty: () => {
-//         throw new Error('нет доступа');
-//       },
-//     });
-//   }
-//
-//   _createDocumentElement(tagName) {
-//     // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
-//     return document.createElement(tagName);
-//   }
-//
-//   show() {
-//     this.element.style.display = 'block';
-//   }
-//
-//   hide() {
-//     this.element.style.display = 'none';
-//   }
-// }
+import { EventBus } from './EventBus.ts';
+
+const enum Block_Events {
+  INIT = 'init',
+  FLOW_CDM = 'flow:component-did-mount',
+  FLOW_CDU = 'flow:component-did-update',
+  FLOW_RENDER = 'flow:render',
+}
+
+type Props = Record<string, unknown> & {
+  events?: Record<string, EventListenerOrEventListenerObject>;
+};
+
+export abstract class Block<P extends Props = Props> {
+  private readonly _eventBus = new EventBus();
+
+  private _element: HTMLElement | null = null;
+
+  protected props: P;
+
+  get element(): HTMLElement {
+    if (!this._element) {
+      throw new Error('Element is not initialized');
+    }
+    return this._element;
+  }
+
+  constructor(props = {} as P) {
+    this.props = this._makePropsProxy(props);
+
+    this._registerEvents();
+    this._eventBus.emit(Block_Events.INIT);
+  }
+
+  abstract render(): string;
+
+  setProps = (nextProps: P) => {
+    Object.assign(this.props, nextProps);
+  };
+
+  dispatchComponentDidMount() {
+    this._eventBus.emit(Block_Events.FLOW_CDM);
+  }
+
+  private _init() {
+    this._eventBus.emit(Block_Events.FLOW_RENDER);
+  }
+
+  private _componentDidMount() {}
+
+  private _componentDidUpdate() {
+    this._eventBus.emit(Block_Events.FLOW_RENDER);
+  }
+
+  private _registerEvents() {
+    this._eventBus.on(Block_Events.INIT, this._init.bind(this));
+    this._eventBus.on(Block_Events.FLOW_CDM, this._componentDidMount.bind(this));
+    this._eventBus.on(Block_Events.FLOW_CDU, this._componentDidUpdate.bind(this));
+    this._eventBus.on(Block_Events.FLOW_RENDER, this._render.bind(this));
+  }
+
+  private _render() {
+    const template = document.createElement('template');
+    template.innerHTML = this.render().trim();
+
+    const nextElement = template.content.firstElementChild;
+    if (!nextElement) {
+      throw new Error('Render returned empty template');
+    }
+
+    if (this._element) {
+      this._removeEventListeners();
+      this._element.replaceWith(nextElement);
+    }
+
+    this._element = nextElement as HTMLElement;
+
+    this._addEventListeners();
+  }
+
+  private _addEventListeners(): void {
+    const { events } = this.props;
+    if (!events) {
+      return;
+    }
+
+    Object.entries(events).forEach(([eventName, handler]) => {
+      this._element?.addEventListener(eventName, handler);
+    });
+  }
+
+  private _removeEventListeners(): void {
+    const { events } = this.props;
+    if (!events || !this._element) {
+      return;
+    }
+
+    Object.entries(events).forEach(([eventName, handler]) => {
+      this._element?.removeEventListener(eventName, handler);
+    });
+  }
+
+  private _makePropsProxy(props: P): P {
+    return new Proxy(props, {
+      set: (target, key: string, value: unknown) => {
+        if (!(key in target)) {
+          throw new Error('Cannot set property');
+        }
+
+        // eslint-disable-next-line no-param-reassign
+        (target as Record<string, unknown>)[key] = value;
+        this._eventBus.emit(Block_Events.FLOW_CDU);
+        return true;
+      },
+      deleteProperty: () => {
+        throw new Error('нет доступа');
+      },
+    });
+  }
+}
