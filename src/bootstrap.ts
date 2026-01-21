@@ -22,8 +22,9 @@ export default () => {
 
     const form = new Form({
       title: 'Marat form',
-      submitButton,
-      submitText: 'Submit',
+      children: {
+        submitButton,
+      },
     });
     appContainer.appendChild(form.element);
   } else {

@@ -10,6 +10,7 @@ const enum Block_Events {
 }
 
 export type BlockProps = Record<string, unknown> & {
+  children?: Record<string, Block>;
   events?: Record<string, EventListenerOrEventListenerObject>;
   settings?: { withInternalID?: boolean };
   __id?: string;
@@ -22,7 +23,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
   private readonly _id: string | null;
 
-  protected props: P;
+  protected readonly props: P;
 
   protected children: Record<string, Block> = {};
 
@@ -52,7 +53,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
   abstract render(): DocumentFragment;
 
-  setProps = (nextProps: Partial<P>) => {
+  setProps = (nextProps: Partial<BlockProps>) => {
     Object.assign(this.props, nextProps);
   };
 
@@ -69,7 +70,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
   protected componentDidMount() {}
 
-  protected componentDidUpdate(_oldProps: P, _newProps: P): boolean {
+  protected componentDidUpdate(_oldProps: BlockProps, _newProps: BlockProps): boolean {
     return true;
   }
 
@@ -203,20 +204,11 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     children: Record<string, Block>;
     props: P;
   } {
-    const children: Record<string, Block> = {};
+    const { children: childrenProp, ...rest } = propsAndChildren as Record<string, unknown> & {
+      children?: Record<string, Block>;
+    };
+    const children: Record<string, Block> = { ...(childrenProp ?? {}) };
 
-    const props: Record<string, unknown> = {};
-
-    const isBlock = (value: unknown): value is Block => value instanceof Block;
-
-    Object.entries(propsAndChildren).forEach(([key, value]) => {
-      if (isBlock(value)) {
-        children[key] = value;
-      } else {
-        props[key] = value;
-      }
-    });
-
-    return { children, props: props as P };
+    return { children, props: rest as P };
   }
 }

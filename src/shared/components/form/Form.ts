@@ -6,8 +6,9 @@ import './Form.css';
 
 type FormProps = {
   title: string;
-  submitButton: Button;
-  submitText?: string;
+  children: {
+    submitButton: Button;
+  };
 };
 
 export class Form extends Block<FormProps> {
