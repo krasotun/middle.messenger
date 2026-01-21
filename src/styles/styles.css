@@ -29,6 +29,12 @@
   --color-white: #fff;
   --color-accent: #3aa0ff;
   --color-accent-hover: #2b8cf0;
+  --color-success: #22a862;
+  --color-success-hover: #1f9859;
+  --color-danger: #e14b4b;
+  --color-danger-hover: #cc4242;
+  --color-warning: #f1b647;
+  --color-warning-hover: #dca53f;
 
   /* Borders */
   --color-border: #d0d4d9;
@@ -74,6 +80,7 @@ body {
     sans-serif;
   min-height: 100vh;
 }
+
 
 .auth {
   min-height: 0;
