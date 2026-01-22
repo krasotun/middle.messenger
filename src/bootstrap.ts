@@ -1,60 +1,46 @@
-import { SignInform } from './components/sign-in-form/SignInForm.ts';
 import navigationMenu from './components/temp-nav/TempNav.ts';
-import { SignInPage } from './pages/sign-in-page/SignInPage.ts';
-import { Button } from './shared/components/button/Button.ts';
-import { Input } from './shared/components/input/Input.ts';
-import { Link } from './shared/components/link/Link.ts';
+import { createNotFoundPage } from './pages/404-page/index.ts';
+import { createServerErrorPage } from './pages/500-page/index.ts';
+import { createEditProfilePage } from './pages/edit-profile-page/index.ts';
+import { createMainPage } from './pages/main-page/index.ts';
+import { createSignInPage } from './pages/sign-in-page/index.ts';
+import { createSignUpPage } from './pages/sign-up-page/index.ts';
 
 export default () => {
   const appContainer = document.getElementById('app');
 
   if (appContainer) {
-    const signInForm = new SignInform({
-      children: {
-        loginInput: new Input({
-          name: 'login',
-          label: 'Имя пользователя',
-          type: 'text',
-          settings: {
-            withInternalID: true,
-          },
-        }),
-        passwordInput: new Input({
-          name: 'password',
-          label: 'Пароль',
-          type: 'password',
-          settings: {
-            withInternalID: true,
-          },
-        }),
-        submitButton: new Button({
-          color: 'primary',
-          type: 'submit',
-          title: 'Войти',
-          settings: {
-            withInternalID: true,
-          },
-        }),
-        signUpLink: new Link({
-          title: 'Зарегистрироваться',
-          href: '/sign-up',
-          settings: {
-            withInternalID: true,
-          },
-        }),
-      },
-      settings: {
-        withInternalID: true,
-      },
-    });
+    const path = window.location.pathname;
 
-    const signInPage = new SignInPage({
-      children: {
-        signInForm,
-      },
-    });
+    appContainer.innerHTML = '';
     appContainer.appendChild(navigationMenu.element);
-    appContainer.appendChild(signInPage.element);
+
+    switch (path) {
+      case '/':
+      case '/index.html':
+      case '/sign-in':
+        appContainer.appendChild(createSignInPage().element);
+        break;
+      case '/sign-up':
+      case '/sign-up.html':
+        appContainer.appendChild(createSignUpPage().element);
+        break;
+      case '/edit-profile.html':
+        appContainer.appendChild(createEditProfilePage().element);
+        break;
+      case '/main.html':
+        appContainer.appendChild(createMainPage().element);
+        break;
+      case '/500.html':
+        appContainer.appendChild(createServerErrorPage().element);
+        break;
+      case '/404.html':
+        appContainer.appendChild(createNotFoundPage().element);
+        break;
+      default:
+        appContainer.appendChild(createNotFoundPage().element);
+        break;
+    }
   } else {
     throw new Error('Container with id="app" not found! Please, create it');
   }

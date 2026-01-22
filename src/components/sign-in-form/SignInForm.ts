@@ -16,7 +16,7 @@ export type SignInFormProps = BlockProps & {
   };
 };
 
-export class SignInform extends Block<SignInFormProps> {
+export class SignInForm extends Block<SignInFormProps> {
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }

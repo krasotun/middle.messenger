@@ -1,1 +1,1 @@
-export { default } from './404-page.hbs';
+export { NotFoundPage, createNotFoundPage } from './NotFoundPage.ts';

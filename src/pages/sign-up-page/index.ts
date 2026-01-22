@@ -1,1 +1,1 @@
-export { default } from './sign-up-page.hbs';
+export { SignUpPage, createSignUpPage } from './SignUpPage.ts';

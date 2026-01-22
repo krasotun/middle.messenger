@@ -1,1 +1,1 @@
-export { default } from './main-page.hbs';
+export { MainPage, createMainPage } from './MainPage.ts';

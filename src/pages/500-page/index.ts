@@ -1,1 +1,1 @@
-export { default } from './500-page.hbs';
+export { ServerErrorPage, createServerErrorPage } from './ServerErrorPage.ts';
