@@ -1,7 +1,5 @@
 import '../../styles/styles.css';
 
-import renderTempNav from '../../components/temp-nav/temp-nav.ts';
-
 import EditProfilePage from './index';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,5 +9,5 @@ document.addEventListener('DOMContentLoaded', () => {
     throw new Error('Container with id="app" not found! Please, create it');
   }
 
-  appContainer.innerHTML = renderTempNav() + EditProfilePage({});
+  appContainer.innerHTML = EditProfilePage({});
 });

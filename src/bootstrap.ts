@@ -1,58 +1,60 @@
+import { SignInform } from './components/sign-in-form/SignInForm.ts';
+import navigationMenu from './components/temp-nav/TempNav.ts';
+import { SignInPage } from './pages/sign-in-page/SignInPage.ts';
+import { Button } from './shared/components/button/Button.ts';
 import { Input } from './shared/components/input/Input.ts';
+import { Link } from './shared/components/link/Link.ts';
 
 export default () => {
   const appContainer = document.getElementById('app');
 
   if (appContainer) {
-    const inputsWrapper = document.createElement('div');
-    inputsWrapper.className = 'demo-inputs';
-
-    const inputInstances = [
-      {
-        label: 'Login',
-        name: 'login',
-        type: 'text',
-        placeholder: 'Enter login',
+    const signInForm = new SignInform({
+      children: {
+        loginInput: new Input({
+          name: 'login',
+          label: 'Имя пользователя',
+          type: 'text',
+          settings: {
+            withInternalID: true,
+          },
+        }),
+        passwordInput: new Input({
+          name: 'password',
+          label: 'Пароль',
+          type: 'password',
+          settings: {
+            withInternalID: true,
+          },
+        }),
+        submitButton: new Button({
+          color: 'primary',
+          type: 'submit',
+          title: 'Войти',
+          settings: {
+            withInternalID: true,
+          },
+        }),
+        signUpLink: new Link({
+          title: 'Зарегистрироваться',
+          href: '/sign-up',
+          settings: {
+            withInternalID: true,
+          },
+        }),
       },
-      {
-        label: 'Email',
-        name: 'email',
-        type: 'email',
-        placeholder: 'name@example.com',
-        error: 'Invalid email format',
+      settings: {
+        withInternalID: true,
       },
-      {
-        label: 'Password',
-        name: 'password',
-        type: 'password',
-        placeholder: '••••••••',
-        disabled: true,
-      },
-      {
-        label: 'Phone',
-        name: 'phone',
-        type: 'tel',
-        placeholder: '+1 555 000 0000',
-        disabled: true,
-        error: 'Phone is required',
-      },
-      {
-        label: 'Age',
-        name: 'age',
-        type: 'number',
-        placeholder: '18',
-      },
-    ] as const;
-
-    inputInstances.forEach((props) => {
-      const input = new Input({
-        ...props,
-        settings: { withInternalID: true },
-      });
-      inputsWrapper.appendChild(input.element);
     });
 
-    appContainer.appendChild(inputsWrapper);
+    const signInPage = new SignInPage({
+      children: {
+        signInForm,
+      },
+    });
+    appContainer.appendChild(navigationMenu.element);
+    appContainer.appendChild(signInPage.element);
   } else {
     throw new Error('Container with id="app" not found! Please, create it');
   }
