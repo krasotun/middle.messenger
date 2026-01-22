@@ -81,6 +81,12 @@ body {
   min-height: 100vh;
 }
 
+.demo-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 
 .auth {
   min-height: 0;

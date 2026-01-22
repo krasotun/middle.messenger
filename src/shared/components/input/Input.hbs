@@ -1,0 +1,15 @@
+<div class="input{{#if error}} input__invalid{{/if}}">
+  <label class="input__label" for="{{ name }}">{{ label }}</label>
+  <input
+    class="input__control"
+    type="{{ type }}"
+    id="{{ name }}"
+    name="{{ name }}"
+    value="{{ value }}"
+    placeholder="{{ placeholder }}"
+    {{#if disabled}}disabled="disabled"{{/if}}
+  >
+  {{#if error}}
+    <div class="input__error">{{ error }}</div>
+  {{/if}}
+</div>
