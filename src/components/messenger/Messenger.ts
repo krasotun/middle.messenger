@@ -1,12 +1,10 @@
-import { Block, BlockProps } from '../../core/Block.ts';
+import { Block } from '../../core/Block.ts';
 
 import template from './Messenger.hbs';
 
 import './Messenger.css';
 
-export type MessengerProps = BlockProps;
-
-export class Messenger extends Block<MessengerProps> {
+export class Messenger extends Block {
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }

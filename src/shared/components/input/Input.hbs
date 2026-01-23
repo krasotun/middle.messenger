@@ -1,7 +1,8 @@
-<div class="input{{#if error}} input__invalid{{/if}}">
+<div class="input{{#if isInvalid}} input__invalid{{/if}}">
   <label class="input__label" for="{{ name }}">{{ label }}</label>
   <input
     class="input__control"
+    data-event-target="input"
     type="{{ type }}"
     id="{{ name }}"
     name="{{ name }}"
@@ -9,7 +10,6 @@
     placeholder="{{ placeholder }}"
     {{#if disabled}}disabled="disabled"{{/if}}
   >
-  {{#if error}}
-    <div class="input__error">{{ error }}</div>
+  {{#if isInvalid}}
+    <div class="input__error">Не валиден</div>
   {{/if}}
-</div>

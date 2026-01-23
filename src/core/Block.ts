@@ -130,8 +130,20 @@ export abstract class Block<P extends BlockProps = BlockProps> {
       return;
     }
 
-    Object.entries(events).forEach(([eventName, handler]) => {
-      this._element?.addEventListener(eventName, handler);
+    Object.entries(events).forEach(([eventKey, handler]) => {
+      if (!this._element) {
+        return;
+      }
+      const [eventName, selector] = eventKey.split(/:(.+)/);
+      if (!eventName) {
+        return;
+      }
+      if (!selector) {
+        this._element.addEventListener(eventName, handler);
+        return;
+      }
+      const target = this._element.querySelector(`[data-event-target="${selector}"]`);
+      target?.addEventListener(eventName, handler);
     });
   }
 
@@ -141,8 +153,17 @@ export abstract class Block<P extends BlockProps = BlockProps> {
       return;
     }
 
-    Object.entries(events).forEach(([eventName, handler]) => {
-      this._element?.removeEventListener(eventName, handler);
+    Object.entries(events).forEach(([eventKey, handler]) => {
+      const [eventName, selector] = eventKey.split(/:(.+)/);
+      if (!eventName) {
+        return;
+      }
+      if (!selector) {
+        this._element?.removeEventListener(eventName, handler);
+        return;
+      }
+      const target = this._element?.querySelector(`[data-event-target="${selector}"]`);
+      target?.removeEventListener(eventName, handler);
     });
   }
 

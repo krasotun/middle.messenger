@@ -29,6 +29,11 @@ export const createSignInPage = () =>
             name: 'login',
             label: 'Имя пользователя',
             type: 'text',
+            events: {
+              'blur:input': (e) => {
+                console.log(e);
+              },
+            },
             settings: {
               withInternalID: true,
             },
