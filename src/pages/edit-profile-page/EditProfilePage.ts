@@ -2,6 +2,15 @@ import { EditProfileForm } from '../../components/edit-profile-form/EditProfileF
 import { Block, BlockProps } from '../../core/Block.ts';
 import { Button } from '../../shared/components/button/Button.ts';
 import { Input } from '../../shared/components/input/Input.ts';
+import {
+  emailValidator,
+  loginValidator,
+  maxLengthValidator,
+  minLengthValidator,
+  nameValidator,
+  passwordValidator,
+  phoneValidator,
+} from '../../shared/validators';
 
 import template from './edit-profile-page.hbs';
 
@@ -28,6 +37,7 @@ export const createEditProfilePage = () =>
             name: 'first_name',
             label: 'Имя',
             type: 'text',
+            validators: [nameValidator()],
             settings: {
               withInternalID: true,
             },
@@ -36,6 +46,7 @@ export const createEditProfilePage = () =>
             name: 'second_name',
             label: 'Фамилия',
             type: 'text',
+            validators: [nameValidator()],
             settings: {
               withInternalID: true,
             },
@@ -44,6 +55,7 @@ export const createEditProfilePage = () =>
             name: 'display_name',
             label: 'Отображаемое имя',
             type: 'text',
+            validators: [nameValidator()],
             settings: {
               withInternalID: true,
             },
@@ -52,6 +64,7 @@ export const createEditProfilePage = () =>
             name: 'login',
             label: 'Логин',
             type: 'text',
+            validators: [loginValidator(), minLengthValidator(3), maxLengthValidator(20)],
             settings: {
               withInternalID: true,
             },
@@ -60,6 +73,7 @@ export const createEditProfilePage = () =>
             name: 'email',
             label: 'Почта',
             type: 'email',
+            validators: [emailValidator()],
             settings: {
               withInternalID: true,
             },
@@ -68,6 +82,7 @@ export const createEditProfilePage = () =>
             name: 'phone',
             label: 'Телефон',
             type: 'tel',
+            validators: [phoneValidator(), minLengthValidator(10), maxLengthValidator(15)],
             settings: {
               withInternalID: true,
             },
@@ -84,6 +99,7 @@ export const createEditProfilePage = () =>
             name: 'oldPassword',
             label: 'Старый пароль',
             type: 'password',
+            validators: [passwordValidator(), minLengthValidator(8), maxLengthValidator(40)],
             settings: {
               withInternalID: true,
             },
@@ -92,6 +108,7 @@ export const createEditProfilePage = () =>
             name: 'newPassword',
             label: 'Новый пароль',
             type: 'password',
+            validators: [passwordValidator(), minLengthValidator(8), maxLengthValidator(40)],
             settings: {
               withInternalID: true,
             },
