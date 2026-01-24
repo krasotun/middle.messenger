@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run typecheck && npm run lint && vite build",
+    "build": "npm run typecheck && npm run lint && npm run lint:styles && vite build",
     "preview": "vite preview",
     "start": " rm -rf dist && npm run build && npm run preview",
     "lint": "eslint .",
+    "lint:styles": "stylelint \"src/**/*.css\"",
     "typecheck": "tsc --noEmit",
     "format": "prettier \"**/*.{js,mjs,cjs,ts,mts,cts,css,html,md,json}\" --write"
   },
@@ -29,6 +30,8 @@
     "globals": "^16.5.0",
     "postcss": "^8.5.6",
     "postcss-nested": "^7.0.2",
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
     "vite-plugin-checker": "^0.10.2"
