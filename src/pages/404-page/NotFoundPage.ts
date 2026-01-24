@@ -1,5 +1,5 @@
-import { Block, BlockProps } from '../../core/Block.ts';
-import { ErrorPage } from '../../shared/components/error-page/ErrorPage.ts';
+import { Block, type BlockProps } from '../../core';
+import { ErrorPage } from '../../shared/components/error-page';
 
 import template from './NotFoundPage.hbs';
 

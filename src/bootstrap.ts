@@ -1,10 +1,10 @@
-import navigationMenu from './components/temp-nav/TempNav.ts';
-import { createNotFoundPage } from './pages/404-page/index.ts';
-import { createServerErrorPage } from './pages/500-page/index.ts';
-import { createEditProfilePage } from './pages/edit-profile-page/index.ts';
-import { createMainPage } from './pages/main-page/index.ts';
-import { createSignInPage } from './pages/sign-in-page/index.ts';
-import { createSignUpPage } from './pages/sign-up-page/index.ts';
+import navigationMenu from './components/temp-nav';
+import { createNotFoundPage } from './pages/404-page';
+import { createServerErrorPage } from './pages/500-page';
+import { createEditProfilePage } from './pages/edit-profile-page';
+import { createMainPage } from './pages/main-page';
+import { createSignInPage } from './pages/sign-in-page';
+import { createSignUpPage } from './pages/sign-up-page';
 
 export default () => {
   const appContainer = document.getElementById('app');

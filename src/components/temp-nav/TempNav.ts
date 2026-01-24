@@ -1,4 +1,4 @@
-import { Block } from '../../core/Block.ts';
+import { Block } from '../../core';
 
 import template from './TempNav.hbs';
 

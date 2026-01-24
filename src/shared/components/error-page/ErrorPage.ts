@@ -1,4 +1,4 @@
-import { Block, BlockProps } from '../../../core/Block.ts';
+import { Block, type BlockProps } from '../../../core';
 
 import template from './ErrorPage.hbs';
 

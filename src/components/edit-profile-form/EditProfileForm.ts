@@ -1,6 +1,6 @@
-import { Block, BlockProps } from '../../core/Block.ts';
-import { Button } from '../../shared/components/button/Button.ts';
-import { Input } from '../../shared/components/input/Input.ts';
+import { Block, type BlockProps } from '../../core';
+import { Button } from '../../shared/components/button';
+import { Input } from '../../shared/components/input';
 
 import template from './EditProfileForm.hbs';
 

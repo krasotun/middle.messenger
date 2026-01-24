@@ -1,4 +1,4 @@
-import { Block, type BlockProps } from '../../../core/Block.ts';
+import { Block, type BlockProps } from '../../../core';
 
 import template from './Link.hbs';
 import './Link.css';

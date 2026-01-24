@@ -1,4 +1,4 @@
-import { Block, type BlockProps } from '../../../core/Block.ts';
+import { Block, type BlockProps } from '../../../core';
 import { InputValidator } from '../../../types/input-validator.type.ts';
 
 import template from './Input.hbs';
@@ -18,7 +18,7 @@ enum ValidatorMessage {
   Default = 'Некорректное значение',
 }
 
-type InputProps = BlockProps & {
+export type InputProps = BlockProps & {
   name: string;
   label: string;
   type: 'text' | 'email' | 'password' | 'tel' | 'number' | 'file';

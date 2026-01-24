@@ -1,8 +1,8 @@
-import { Messenger } from '../../components/messenger/Messenger.ts';
-import { MessengerSendMessageForm } from '../../components/messenger/send-message-form/MessengerSendMessageForm.ts';
-import { Block, BlockProps } from '../../core/Block.ts';
-import { Button } from '../../shared/components/button/Button.ts';
-import { Input } from '../../shared/components/input/Input.ts';
+import { Messenger } from '../../components/messenger';
+import { MessengerSendMessageForm } from '../../components/messenger/send-message-form';
+import { Block, type BlockProps } from '../../core';
+import { Button } from '../../shared/components/button';
+import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
 
 import template from './main-page.hbs';

@@ -1,7 +1,7 @@
-import { Block, type BlockProps } from '../../core/Block.ts';
+import { Block, type BlockProps } from '../../core';
 
 import template from './Messenger.hbs';
-import { MessengerSendMessageForm } from './send-message-form/MessengerSendMessageForm.ts';
+import { MessengerSendMessageForm } from './send-message-form';
 
 import './Messenger.css';
 
