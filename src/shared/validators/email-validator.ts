@@ -12,8 +12,10 @@ import { InputValidator } from '../../types/input-validator.type.ts';
  * @returns {boolean} True if the string matches email rules, otherwise false.
  */
 export const emailValidator: InputValidator = () => {
-  return (value: string) => {
+  function email(value: string) {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(value);
-  };
+  }
+
+  return email;
 };

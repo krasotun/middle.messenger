@@ -9,9 +9,11 @@ import { InputValidator } from '../../types/input-validator.type.ts';
  * @param {string} value - Input string to validate.
  * @returns {boolean} True if the string matches the login rules, otherwise false.
  */
-export const loginValidator: InputValidator<string> = () => {
-  return (value) => {
-    const re = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
+export const loginValidator: InputValidator = () => {
+  function login(value: string) {
+    const re = /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$/;
     return re.test(value);
-  };
+  }
+
+  return login;
 };

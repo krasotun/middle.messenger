@@ -3,6 +3,12 @@ import { Block, BlockProps } from '../../core/Block.ts';
 import { Button } from '../../shared/components/button/Button.ts';
 import { Input } from '../../shared/components/input/Input.ts';
 import { Link } from '../../shared/components/link/Link.ts';
+import {
+  loginValidator,
+  maxLengthValidator,
+  minLengthValidator,
+  passwordValidator,
+} from '../../shared/validators';
 
 import template from './SignInPage.hbs';
 
@@ -29,11 +35,7 @@ export const createSignInPage = () =>
             name: 'login',
             label: 'Имя пользователя',
             type: 'text',
-            events: {
-              'blur:input': (e) => {
-                console.log(e);
-              },
-            },
+            validators: [loginValidator(), minLengthValidator(3), maxLengthValidator(20)],
             settings: {
               withInternalID: true,
             },
@@ -42,6 +44,7 @@ export const createSignInPage = () =>
             name: 'password',
             label: 'Пароль',
             type: 'password',
+            validators: [passwordValidator(), minLengthValidator(8), maxLengthValidator(40)],
             settings: {
               withInternalID: true,
             },

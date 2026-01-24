@@ -10,8 +10,10 @@ import { InputValidator } from '../../types/input-validator.type.ts';
  */
 
 export const nameValidator: InputValidator = () => {
-  return (value: string) => {
+  function name(value: string) {
     const re = /^[\p{Lu}][\p{L}-]*$/u;
     return re.test(value);
-  };
+  }
+
+  return name;
 };
