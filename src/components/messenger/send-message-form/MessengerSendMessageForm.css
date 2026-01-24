@@ -1,0 +1,38 @@
+.messenger__chat-input {
+    display: flex;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border-muted);
+    align-items: flex-start;
+}
+
+.messenger__chat-input-field {
+    flex: 1;
+}
+
+.messenger__chat-input-action {
+    align-self: flex-start;
+}
+
+.messenger__chat-input-field .input {
+    flex: 1;
+}
+
+.messenger__chat-input .input__label {
+    display: none;
+}
+
+.messenger__chat-input .input__error {
+    display: block;
+}
+
+.messenger__chat-input .button {
+    padding: 10px 16px;
+}
+
+.messenger__chat-input .input__control {
+    height: 36px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}

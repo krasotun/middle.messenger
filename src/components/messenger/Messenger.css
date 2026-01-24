@@ -197,13 +197,6 @@
         align-self: flex-end;
     }
 
-    &__chat-input {
-        display: flex;
-        gap: 12px;
-        padding-top: 12px;
-        border-top: 1px solid var(--color-border-muted);
-    }
-
     &__chat-avatar {
         width: 32px;
         height: 32px;
@@ -217,22 +210,4 @@
         height: 40px;
     }
 
-    &__input {
-        flex: 1;
-        padding: 10px 12px;
-        border: 1px solid var(--color-border);
-        border-radius: 8px;
-        font-size: 14px;
-    }
-
-    &__send {
-        padding: 10px 16px;
-        border: none;
-        border-radius: 8px;
-        background: var(--color-accent);
-        color: var(--color-text-inverse);
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-    }
 }

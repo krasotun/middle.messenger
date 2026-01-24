@@ -14,7 +14,7 @@ enum ValidatorMessage {
   Name = 'Некорректное имя',
   Password = 'Некорректный пароль',
   Phone = 'Некорректный телефон',
-  EmptyValue = 'Поле должно быть пустым',
+  Required = 'Обязательное поле',
   Default = 'Некорректное значение',
 }
 
@@ -122,7 +122,7 @@ export class Input extends Block<InputProps> {
       name: ValidatorMessage.Name,
       password: ValidatorMessage.Password,
       phone: ValidatorMessage.Phone,
-      emptyValue: ValidatorMessage.EmptyValue,
+      required: ValidatorMessage.Required,
     };
 
     return map[name] ?? ValidatorMessage.Default;
