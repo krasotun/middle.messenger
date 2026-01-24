@@ -1,0 +1,13 @@
+<div class="input{{#unless isValid}} input__invalid{{/unless}}">
+  <label class="input__label" for="{{ name }}">{{ label }}</label>
+  <input
+    class="input__control"
+    data-event-target="input"
+    type="{{ type }}"
+    id="{{ name }}"
+    name="{{ name }}"
+    value="{{ value }}"
+    placeholder="{{ placeholder }}"
+    {{#if disabled}}disabled="disabled"{{/if}}
+  >
+  <div class="input__error">{{#unless isValid}}{{ errorMessage }}{{/unless}}</div>
