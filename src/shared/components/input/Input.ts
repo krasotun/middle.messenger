@@ -6,6 +6,18 @@ import './Input.css';
 
 type ValueValidator = ReturnType<InputValidator>;
 
+enum ValidatorMessage {
+  MinLength = 'Минимальная длина',
+  MaxLength = 'Максимальная длина',
+  Email = 'Некорректный email',
+  Login = 'Некорректный логин',
+  Name = 'Некорректное имя',
+  Password = 'Некорректный пароль',
+  Phone = 'Некорректный телефон',
+  EmptyValue = 'Поле должно быть пустым',
+  Default = 'Некорректное значение',
+}
+
 type InputProps = BlockProps & {
   name: string;
   label: string;
@@ -102,24 +114,18 @@ export class Input extends Block<InputProps> {
   }
 
   private static _messageFromValidatorName(name: string): string {
-    switch (name) {
-      case 'minLength':
-        return 'Минимальная длина';
-      case 'maxLength':
-        return 'Максимальная длина';
-      case 'email':
-        return 'Некорректный email';
-      case 'login':
-        return 'Некорректный логин';
-      case 'name':
-        return 'Некорректное имя';
-      case 'password':
-        return 'Некорректный пароль';
-      case 'emptyValue':
-        return 'Поле должно быть пустым';
-      default:
-        return 'Некорректное значение';
-    }
+    const map: Record<string, ValidatorMessage> = {
+      minLength: ValidatorMessage.MinLength,
+      maxLength: ValidatorMessage.MaxLength,
+      email: ValidatorMessage.Email,
+      login: ValidatorMessage.Login,
+      name: ValidatorMessage.Name,
+      password: ValidatorMessage.Password,
+      phone: ValidatorMessage.Phone,
+      emptyValue: ValidatorMessage.EmptyValue,
+    };
+
+    return map[name] ?? ValidatorMessage.Default;
   }
 
   private _setHandlers(): void {
@@ -139,9 +145,7 @@ export class Input extends Block<InputProps> {
     this.validate();
   };
 
-  private _handleFocusEvents = (event: Event) => {
-    console.log(event);
-  };
+  private _handleFocusEvents = (_event: Event) => {};
 
   private _handleInputEvents = (event: Event) => {
     const { value } = event.target as HTMLInputElement;

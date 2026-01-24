@@ -43,19 +43,20 @@ export class SignInForm extends Block<SignInFormProps> {
 
   private _handleSubmit = (event: Event) => {
     event.preventDefault();
-    const { loginInput, passwordInput } = this.children as SignInFormProps['children'];
-    const isLoginValid = loginInput.validate();
-    const isPasswordValid = passwordInput.validate();
+    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
+    let isValid = true;
+    for (const input of inputs) {
+      if (!input.validate()) {
+        isValid = false;
+      }
+    }
 
-    if (!isLoginValid || !isPasswordValid) {
+    if (!isValid) {
       console.log('Данные не валидны');
       return;
     }
 
-    const values = {
-      [loginInput.name]: loginInput.value,
-      [passwordInput.name]: passwordInput.value,
-    };
+    const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
 
     console.log({
       ...values,
