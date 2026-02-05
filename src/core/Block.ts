@@ -61,6 +61,16 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this._eventBus.emit(Block_Events.FLOW_CDM);
   }
 
+  remove(): void {
+    if (!this._element) {
+      return;
+    }
+
+    this._removeEventListeners();
+    this._element.remove();
+    this._element = null;
+  }
+
   protected renderTemplate(
     template: (context?: Record<string, unknown>) => string,
     props: Record<string, unknown> = this.props,
