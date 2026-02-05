@@ -14,17 +14,10 @@ export class Route {
     private _props?: BlockProps,
   ) {}
 
-  navigate(pathName: string): void {
-    if (this.match(pathName)) {
-      this.render();
-    }
-  }
-
   render(): void {
     if (!this._block) {
       this._block = new this._viewClass(this._props ?? {});
       renderToDom(this._block.element);
-      return;
     }
   }
 
