@@ -1,4 +1,5 @@
 import { Router, Routes } from './core/';
+import { ChangePasswordPage } from './pages/change-password-page';
 import { EditProfilePage } from './pages/edit-profile-page';
 import { MainPage } from './pages/main-page';
 import { SignInPage } from './pages/sign-in-page';
@@ -13,6 +14,7 @@ export default () => {
   router.use(Routes.SignUpPage, SignUpPage, {});
   router.use(Routes.MainPage, MainPage, {});
   router.use(Routes.EditProfilePage, EditProfilePage, {});
+  router.use(Routes.ChangePasswordPage, ChangePasswordPage, {});
 
   router.start();
 };

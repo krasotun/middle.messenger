@@ -17,8 +17,6 @@ export type EditProfileFormProps = BlockProps & {
     loginInput: Input;
     emailInput: Input;
     phoneInput: Input;
-    oldPasswordInput: Input;
-    newPasswordInput: Input;
     submitButton: Button;
     cancelButton: Button;
   };

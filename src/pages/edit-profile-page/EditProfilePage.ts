@@ -8,7 +8,6 @@ import {
   maxLengthValidator,
   minLengthValidator,
   nameValidator,
-  passwordValidator,
   phoneValidator,
 } from '../../shared/validators';
 
@@ -78,24 +77,6 @@ export class EditProfilePage extends Block<EditProfilePageProps> {
               label: 'Телефон',
               type: 'tel',
               validators: [phoneValidator(), minLengthValidator(10), maxLengthValidator(15)],
-              settings: {
-                withInternalID: true,
-              },
-            }),
-            oldPasswordInput: new Input({
-              name: 'oldPassword',
-              label: 'Старый пароль',
-              type: 'password',
-              validators: [passwordValidator(), minLengthValidator(8), maxLengthValidator(40)],
-              settings: {
-                withInternalID: true,
-              },
-            }),
-            newPasswordInput: new Input({
-              name: 'newPassword',
-              label: 'Новый пароль',
-              type: 'password',
-              validators: [passwordValidator(), minLengthValidator(8), maxLengthValidator(40)],
               settings: {
                 withInternalID: true,
               },

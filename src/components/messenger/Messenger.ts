@@ -8,6 +8,7 @@ import './Messenger.css';
 
 export type MessengerProps = BlockProps & {
   children: {
+    changePasswordButton: Button;
     editProfileButton: Button;
     sendMessageForm: MessengerSendMessageForm;
   };

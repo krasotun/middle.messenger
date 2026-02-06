@@ -21,6 +21,19 @@ export class MainPage extends Block<MainPageProps> {
       children: {
         messenger: new Messenger({
           children: {
+            changePasswordButton: new Button({
+              title: 'Сменить пароль',
+              type: 'button',
+              color: 'secondary',
+              events: {
+                click: () => {
+                  new Router().go(Routes.ChangePasswordPage);
+                },
+              },
+              settings: {
+                withInternalID: true,
+              },
+            }),
             editProfileButton: new Button({
               title: 'Редактировать профиль',
               type: 'button',

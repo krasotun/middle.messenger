@@ -72,6 +72,7 @@ export class Input extends Block<InputProps> {
       'label',
       'type',
       'name',
+      'events',
     ];
 
     const metaChanged = metaKeys.some((key) => oldProps[key] !== newProps[key]);
