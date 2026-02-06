@@ -1,1 +1,1 @@
-export { EditProfilePage, createEditProfilePage } from './EditProfilePage.ts';
+export { EditProfilePage } from './EditProfilePage.ts';

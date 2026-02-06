@@ -1,3 +1,4 @@
+import { UsersController } from '../../controllers';
 import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
@@ -23,6 +24,8 @@ export type EditProfileFormProps = BlockProps & {
 };
 
 export class EditProfileForm extends Block<EditProfileFormProps> {
+  private readonly _usersController = new UsersController();
+
   constructor(props: EditProfileFormProps) {
     super({
       ...props,
@@ -32,10 +35,16 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
     });
 
     this._setHandlers();
+
+    this._loadData();
   }
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
+  }
+
+  private _loadData() {
+    this._usersController.getUserInfo();
   }
 
   private _setHandlers(): void {

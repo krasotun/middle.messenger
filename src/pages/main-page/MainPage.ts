@@ -1,6 +1,6 @@
 import { Messenger } from '../../components/messenger';
 import { MessengerSendMessageForm } from '../../components/messenger/send-message-form';
-import { Block, type BlockProps } from '../../core';
+import { Block, type BlockProps, Router, Routes } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
@@ -25,6 +25,11 @@ export class MainPage extends Block<MainPageProps> {
               title: 'Редактировать профиль',
               type: 'button',
               color: 'secondary',
+              events: {
+                click: () => {
+                  new Router().go(Routes.EditProfilePage);
+                },
+              },
               settings: {
                 withInternalID: true,
               },

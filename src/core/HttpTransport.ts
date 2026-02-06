@@ -14,6 +14,7 @@ export type RequestOptions<TData = unknown> = {
   data?: TData;
   timeout?: number;
   responseType?: XMLHttpRequestResponseType;
+  withCredentials?: boolean;
 };
 
 export class HTTPTransport {
@@ -98,7 +99,13 @@ export class HTTPTransport {
   };
 
   private _request = (url: string, options: RequestOptions = {}, timeout = 5000) => {
-    const { method = HTTPMethod.GET, headers = {}, data, responseType } = options;
+    const {
+      method = HTTPMethod.GET,
+      headers = {},
+      data,
+      responseType,
+      withCredentials = true,
+    } = options;
 
     return new Promise<XMLHttpRequest>((resolve, reject) => {
       if (!Object.values(HTTPMethod).includes(method)) {
@@ -111,6 +118,7 @@ export class HTTPTransport {
 
       xhr.open(method, newUrl);
       xhr.timeout = timeout;
+      xhr.withCredentials = withCredentials;
       if (responseType) {
         xhr.responseType = responseType;
       }

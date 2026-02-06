@@ -13,11 +13,11 @@ export type UserLoginAndPassword = Pick<UserData, 'login' | 'password'>;
 
 export class AuthApi extends BaseApi {
   signUp(data: UserData) {
-    return this.post('/auth/signup', { data });
+    return this.post('/auth/signup', { data, withCredentials: true });
   }
 
   signIn(data: UserLoginAndPassword) {
-    return this.post('/auth/signin', { data });
+    return this.post('/auth/signin', { data, withCredentials: true });
   }
 
   getUserInfo() {
