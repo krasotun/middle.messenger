@@ -1,4 +1,4 @@
-import { UserData } from '../../api';
+import { UserCreate } from '../../api';
 import { UsersController } from '../../controllers/';
 import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
@@ -67,6 +67,6 @@ export class SignUpForm extends Block<SignUpFormProps> {
     }
 
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
-    this._usersController.registerUser(values as UserData);
+    this._usersController.registerUser(values as UserCreate);
   };
 }

@@ -1,26 +1,32 @@
 import { BaseApi } from './base-api';
 
-export type UserData = {
+export type User = {
+  id: number;
   first_name: string;
   second_name: string;
+  display_name?: string | null;
   login: string;
   email: string;
-  password: string;
   phone: string;
+  avatar?: string | null;
 };
 
-export type UserLoginAndPassword = Pick<UserData, 'login' | 'password'>;
+export type UserCreate = Omit<User, 'id' | 'display_name' | 'avatar'> & {
+  password: string;
+};
+
+export type UserCredentials = Pick<UserCreate, 'login' | 'password'>;
 
 export class AuthApi extends BaseApi {
-  signUp(data: UserData) {
-    return this.post('/auth/signup', { data, withCredentials: true });
+  signUp(data: UserCreate) {
+    return this.post('/auth/signup', { data });
   }
 
-  signIn(data: UserLoginAndPassword) {
-    return this.post('/auth/signin', { data, withCredentials: true });
+  signIn(data: UserCredentials) {
+    return this.post('/auth/signin', { data });
   }
 
   getUserInfo() {
-    return this.get('/auth/user');
+    return this.get('/auth/user') as Promise<User>;
   }
 }

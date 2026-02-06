@@ -6,3 +6,4 @@ export type { RequestOptions } from './HttpTransport.ts';
 
 export { Route } from './Route.ts';
 export { Router, Routes } from './Router.ts';
+export { Store, StoreEvents } from './Store.ts';

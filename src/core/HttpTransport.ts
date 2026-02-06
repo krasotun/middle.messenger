@@ -19,19 +19,19 @@ export type RequestOptions<TData = unknown> = {
 
 export class HTTPTransport {
   get = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.GET }, options.timeout);
+    return this._request(url, { ...options, method: HTTPMethod.GET });
   };
 
   put = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.PUT }, options.timeout);
+    return this._request(url, { ...options, method: HTTPMethod.PUT });
   };
 
   post = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.POST }, options.timeout);
+    return this._request(url, { ...options, method: HTTPMethod.POST });
   };
 
   delete = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.DELETE }, options.timeout);
+    return this._request(url, { ...options, method: HTTPMethod.DELETE });
   };
 
   private _queryStringify = (data: QueryData) => {
@@ -98,13 +98,14 @@ export class HTTPTransport {
     throw new Error('Unsupported data type');
   };
 
-  private _request = (url: string, options: RequestOptions = {}, timeout = 5000) => {
+  private _request = (url: string, options: RequestOptions = {}) => {
     const {
       method = HTTPMethod.GET,
       headers = {},
       data,
       responseType,
       withCredentials = true,
+      timeout = 5000,
     } = options;
 
     return new Promise<XMLHttpRequest>((resolve, reject) => {

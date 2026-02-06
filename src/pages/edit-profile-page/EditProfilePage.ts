@@ -82,14 +82,6 @@ export class EditProfilePage extends Block<EditProfilePageProps> {
                 withInternalID: true,
               },
             }),
-            avatarInput: new Input({
-              name: 'avatar',
-              label: 'Аватар',
-              type: 'file',
-              settings: {
-                withInternalID: true,
-              },
-            }),
             oldPasswordInput: new Input({
               name: 'oldPassword',
               label: 'Старый пароль',

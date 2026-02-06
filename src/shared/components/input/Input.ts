@@ -36,6 +36,7 @@ export type InputProps = BlockProps & {
 };
 
 export class Input extends Block<InputProps> {
+  private _isFocused = false;
   constructor(props: InputProps) {
     super({
       ...props,
@@ -63,10 +64,6 @@ export class Input extends Block<InputProps> {
   }
 
   protected componentDidUpdate(oldProps: InputProps, newProps: InputProps): boolean {
-    if (oldProps.value === newProps.value) {
-      return true;
-    }
-
     const metaKeys: Array<keyof InputProps> = [
       'isValid',
       'errorMessage',
@@ -77,7 +74,14 @@ export class Input extends Block<InputProps> {
       'name',
     ];
 
-    return metaKeys.some((key) => oldProps[key] !== newProps[key]);
+    const metaChanged = metaKeys.some((key) => oldProps[key] !== newProps[key]);
+    const valueChanged = oldProps.value !== newProps.value;
+
+    if (valueChanged && !metaChanged && this._isFocused) {
+      return false;
+    }
+
+    return valueChanged || metaChanged;
   }
 
   public validate(): boolean {
@@ -140,12 +144,15 @@ export class Input extends Block<InputProps> {
   }
 
   private _handleBlurEvents = (event: Event) => {
+    this._isFocused = false;
     const { value } = event.target as HTMLInputElement;
     this.setProps({ value });
     this.validate();
   };
 
-  private _handleFocusEvents = (_event: Event) => {};
+  private _handleFocusEvents = (_event: Event) => {
+    this._isFocused = true;
+  };
 
   private _handleInputEvents = (event: Event) => {
     const { value } = event.target as HTMLInputElement;

@@ -1,4 +1,4 @@
-import { UserLoginAndPassword } from '../../api';
+import { UserCredentials } from '../../api';
 import { UsersController } from '../../controllers';
 import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
@@ -60,6 +60,6 @@ export class SignInForm extends Block<SignInFormProps> {
       return;
     }
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
-    this._usersController.authorizeUser(values as UserLoginAndPassword);
+    this._usersController.authorizeUser(values as UserCredentials);
   };
 }

@@ -1,11 +1,12 @@
-import { AuthApi, UserData, UserLoginAndPassword } from '../api';
-import { Router, Routes } from '../core';
+import { AuthApi, UserCreate, UserCredentials } from '../api';
+import { Router, Routes, Store } from '../core';
 
 export class UsersController {
   private readonly _authApi = new AuthApi();
   private readonly _router = new Router();
+  private readonly _store = new Store();
 
-  registerUser(data: UserData) {
+  registerUser(data: UserCreate) {
     this._authApi
       .signUp(data)
       .then(() => {
@@ -17,7 +18,7 @@ export class UsersController {
       });
   }
 
-  authorizeUser(data: UserLoginAndPassword) {
+  authorizeUser(data: UserCredentials) {
     this._authApi
       .signIn(data)
       .then(() => {
@@ -30,6 +31,11 @@ export class UsersController {
   }
 
   getUserInfo() {
-    this._authApi.getUserInfo().then(console.log).catch(console.log);
+    this._authApi
+      .getUserInfo()
+      .then((userInfo) => {
+        this._store.set('userInfo', userInfo);
+      })
+      .catch(console.log);
   }
 }
