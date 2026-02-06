@@ -44,3 +44,9 @@
 - ESLint — линтинг JS/TS
 - Stylelint — линтинг CSS
 - Prettier — форматирование
+
+
+пользователи
+
+krasotun
+p@ssw0rdQAZXSW@

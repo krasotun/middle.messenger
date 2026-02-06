@@ -3,6 +3,11 @@ import { Nullable } from '../types/nullable.type.ts';
 import { BlockProps } from './Block.ts';
 import { BlockConstructor, Route } from './Route.ts';
 
+export enum Routes {
+  SignInPage = '/',
+  SignUpPage = '/sign-up',
+}
+
 export class Router {
   private static _instance: Nullable<Router> = null;
 
@@ -18,7 +23,7 @@ export class Router {
     Router._instance = this;
   }
 
-  use(pathName: string, block: BlockConstructor, props: BlockProps) {
+  use(pathName: Routes, block: BlockConstructor, props: BlockProps) {
     const route = new Route(pathName, block, props);
 
     this._routes.push(route);

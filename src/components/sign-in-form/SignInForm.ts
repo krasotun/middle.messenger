@@ -1,3 +1,5 @@
+import { UserLoginAndPassword } from '../../api';
+import { UsersController } from '../../controllers';
 import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
@@ -17,6 +19,8 @@ export type SignInFormProps = BlockProps & {
 };
 
 export class SignInForm extends Block<SignInFormProps> {
+  private readonly _usersController = new UsersController();
+
   constructor(props: SignInFormProps) {
     super({
       ...props,
@@ -55,11 +59,7 @@ export class SignInForm extends Block<SignInFormProps> {
       console.log('Данные не валидны');
       return;
     }
-
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
-
-    console.log({
-      ...values,
-    });
+    this._usersController.authorizeUser(values as UserLoginAndPassword);
   };
 }

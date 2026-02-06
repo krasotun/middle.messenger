@@ -1,4 +1,4 @@
-import { Router } from './core/Router.ts';
+import { Router, Routes } from './core/';
 import { SignInPage } from './pages/sign-in-page';
 import { SignUpPage } from './pages/sign-up-page';
 
@@ -7,8 +7,8 @@ export default () => {
 
   const router = new Router();
 
-  router.use('/', SignInPage, {});
-  router.use('/sign-up', SignUpPage, {});
+  router.use(Routes.SignInPage, SignInPage, {});
+  router.use(Routes.SignUpPage, SignUpPage, {});
 
   router.start();
 };
