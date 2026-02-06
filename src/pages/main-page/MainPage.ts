@@ -16,45 +16,46 @@ export type MainPageProps = BlockProps & {
 };
 
 export class MainPage extends Block<MainPageProps> {
+  constructor() {
+    super({
+      children: {
+        messenger: new Messenger({
+          children: {
+            sendMessageForm: new MessengerSendMessageForm({
+              children: {
+                messageInput: new Input({
+                  name: 'message',
+                  label: 'Сообщение',
+                  type: 'text',
+                  placeholder: 'Сообщение',
+                  validators: [requiredValidator()],
+                  settings: {
+                    withInternalID: true,
+                  },
+                }),
+                sendButton: new Button({
+                  title: 'Отправить',
+                  type: 'submit',
+                  color: 'primary',
+                  settings: {
+                    withInternalID: true,
+                  },
+                }),
+              },
+              settings: {
+                withInternalID: true,
+              },
+            }),
+          },
+          settings: {
+            withInternalID: true,
+          },
+        }),
+      },
+    } as MainPageProps);
+  }
+
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 }
-
-export const createMainPage = () =>
-  new MainPage({
-    children: {
-      messenger: new Messenger({
-        children: {
-          sendMessageForm: new MessengerSendMessageForm({
-            children: {
-              messageInput: new Input({
-                name: 'message',
-                label: 'Сообщение',
-                type: 'text',
-                placeholder: 'Сообщение',
-                validators: [requiredValidator()],
-                settings: {
-                  withInternalID: true,
-                },
-              }),
-              sendButton: new Button({
-                title: 'Отправить',
-                type: 'submit',
-                color: 'primary',
-                settings: {
-                  withInternalID: true,
-                },
-              }),
-            },
-            settings: {
-              withInternalID: true,
-            },
-          }),
-        },
-        settings: {
-          withInternalID: true,
-        },
-      }),
-    },
-  });

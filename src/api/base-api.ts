@@ -10,14 +10,17 @@ export abstract class BaseApi {
   }
 
   protected _handleResponse(xhr: XMLHttpRequest): unknown {
-    return this._parseJson(xhr.response);
-  }
-
-  protected _parseJson(response: unknown): unknown {
-    if (typeof response === 'string') {
-      return JSON.parse(response);
+    const contentType = xhr.getResponseHeader('Content-Type');
+    const isJson = contentType?.includes('application/json') ?? false;
+    if (!isJson) {
+      return xhr.response;
     }
 
-    return response;
+    const trimmed = String(xhr.response ?? '').trim();
+    if (trimmed === '') {
+      return null;
+    }
+
+    return JSON.parse(trimmed);
   }
 }

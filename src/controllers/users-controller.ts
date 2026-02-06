@@ -22,6 +22,7 @@ export class UsersController {
       .signIn(data)
       .then(() => {
         console.log('Авторизация успешна');
+        this._router.go(Routes.MainPage);
       })
       .catch((error: unknown) => {
         console.log(error);

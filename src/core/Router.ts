@@ -6,6 +6,7 @@ import { BlockConstructor, Route } from './Route.ts';
 export enum Routes {
   SignInPage = '/',
   SignUpPage = '/sign-up',
+  MainPage = '/main',
 }
 
 export class Router {
