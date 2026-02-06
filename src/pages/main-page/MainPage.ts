@@ -21,6 +21,14 @@ export class MainPage extends Block<MainPageProps> {
       children: {
         messenger: new Messenger({
           children: {
+            editProfileButton: new Button({
+              title: 'Редактировать профиль',
+              type: 'button',
+              color: 'secondary',
+              settings: {
+                withInternalID: true,
+              },
+            }),
             sendMessageForm: new MessengerSendMessageForm({
               children: {
                 messageInput: new Input({

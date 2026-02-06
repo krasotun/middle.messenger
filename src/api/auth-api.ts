@@ -19,4 +19,8 @@ export class AuthApi extends BaseApi {
   signIn(data: UserLoginAndPassword) {
     return this.post('/auth/signin', { data });
   }
+
+  getUserInfo() {
+    return this.get('/auth/user');
+  }
 }

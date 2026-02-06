@@ -28,4 +28,8 @@ export class UsersController {
         console.log(error);
       });
   }
+
+  getUserInfo() {
+    this._authApi.getUserInfo().then(console.log).catch(console.log);
+  }
 }

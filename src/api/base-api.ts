@@ -9,6 +9,11 @@ export abstract class BaseApi {
     return this._handleResponse(xhr);
   }
 
+  protected async get(url: string, options?: RequestOptions) {
+    const xhr = await this.http.get(this.baseUrl + url, options);
+    return this._handleResponse(xhr);
+  }
+
   protected _handleResponse(xhr: XMLHttpRequest): unknown {
     const contentType = xhr.getResponseHeader('Content-Type');
     const isJson = contentType?.includes('application/json') ?? false;
