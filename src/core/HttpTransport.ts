@@ -8,7 +8,7 @@ enum HTTPMethod {
 type QueryValue = string | number | boolean | null | undefined;
 type QueryData = Record<string, QueryValue>;
 
-type RequestOptions<TData = unknown> = {
+export type RequestOptions<TData = unknown> = {
   method?: HTTPMethod;
   headers?: Record<string, string>;
   data?: TData;
@@ -17,6 +17,22 @@ type RequestOptions<TData = unknown> = {
 };
 
 export class HTTPTransport {
+  get = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.GET }, options.timeout);
+  };
+
+  put = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.PUT }, options.timeout);
+  };
+
+  post = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.POST }, options.timeout);
+  };
+
+  delete = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.DELETE }, options.timeout);
+  };
+
   private _queryStringify = (data: QueryData) => {
     if (typeof data !== 'object') {
       throw new Error('Data must be object');
@@ -39,22 +55,6 @@ export class HTTPTransport {
       .join('&');
 
     return `?${query}`;
-  };
-
-  get = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.GET }, options.timeout);
-  };
-
-  put = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.PUT }, options.timeout);
-  };
-
-  post = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.POST }, options.timeout);
-  };
-
-  delete = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.DELETE }, options.timeout);
   };
 
   private _buildUrl = (url: string, method: HTTPMethod, data: unknown) => {

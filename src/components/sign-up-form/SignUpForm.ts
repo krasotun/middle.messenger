@@ -1,3 +1,4 @@
+import { AuthApi, type UserData } from '../../api/auth-api';
 import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
@@ -21,6 +22,8 @@ export type SignUpFormProps = BlockProps & {
 };
 
 export class SignUpForm extends Block<SignUpFormProps> {
+  private _authApi = new AuthApi();
+
   constructor(props: SignUpFormProps) {
     super({
       ...props,
@@ -47,7 +50,9 @@ export class SignUpForm extends Block<SignUpFormProps> {
 
   private _handleSubmit = (event: Event) => {
     event.preventDefault();
-    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
+    const inputs = Object.values(this.children).filter(
+      (child): child is Input => child instanceof Input,
+    );
     let isValid = true;
     for (const input of inputs) {
       if (!input.validate()) {
@@ -60,10 +65,37 @@ export class SignUpForm extends Block<SignUpFormProps> {
       return;
     }
 
-    const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
+    const values = this._collectValues(inputs);
 
-    console.log({
-      ...values,
-    });
+    this._submit(values)
+      .then(() => {
+        console.log('Регистрация успешна');
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+      });
   };
+
+  private async _submit(values: UserData) {
+    await this._authApi.signUp(values);
+  }
+
+  private _collectValues(inputs: Input[]): UserData {
+    const values: UserData = {
+      first_name: '',
+      second_name: '',
+      login: '',
+      email: '',
+      password: '',
+      phone: '',
+    };
+
+    for (const input of inputs) {
+      if (input.name in values) {
+        values[input.name as keyof UserData] = input.value ?? '';
+      }
+    }
+
+    return values;
+  }
 }
