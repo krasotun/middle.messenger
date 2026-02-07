@@ -63,4 +63,8 @@ export class UsersController {
       console.log(error);
     }
   }
+
+  goBack() {
+    this._router.back();
+  }
 }

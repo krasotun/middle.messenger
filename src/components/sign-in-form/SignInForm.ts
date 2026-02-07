@@ -4,13 +4,19 @@ import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { Link } from '../../shared/components/link';
+import {
+  loginValidator,
+  maxLengthValidator,
+  minLengthValidator,
+  passwordValidator,
+} from '../../shared/validators';
 
 import template from './SignInForm.hbs';
 
 import './SignInForm.css';
 
 export type SignInFormProps = BlockProps & {
-  children: {
+  children?: {
     loginInput: Input;
     passwordInput: Input;
     submitButton: Button;
@@ -21,9 +27,49 @@ export type SignInFormProps = BlockProps & {
 export class SignInForm extends Block<SignInFormProps> {
   private readonly _usersController = new UsersController();
 
-  constructor(props: SignInFormProps) {
+  constructor(props: SignInFormProps = {}) {
+    const defaultChildren = {
+      loginInput: new Input({
+        name: 'login',
+        label: 'Имя пользователя',
+        type: 'text',
+        validators: [loginValidator(), minLengthValidator(3), maxLengthValidator(20)],
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      passwordInput: new Input({
+        name: 'password',
+        label: 'Пароль',
+        type: 'password',
+        validators: [passwordValidator(), minLengthValidator(8), maxLengthValidator(40)],
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      submitButton: new Button({
+        color: 'primary',
+        type: 'submit',
+        title: 'Войти',
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      signUpLink: new Link({
+        title: 'Зарегистрироваться',
+        href: '/sign-up',
+        settings: {
+          withInternalID: true,
+        },
+      }),
+    };
+
     super({
       ...props,
+      children: {
+        ...defaultChildren,
+        ...(props.children ?? {}),
+      },
       events: {
         ...(props.events ?? {}),
       },
