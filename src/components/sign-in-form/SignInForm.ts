@@ -60,6 +60,22 @@ export class SignInForm extends Block<SignInFormProps> {
       return;
     }
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
-    this._usersController.authorizeUser(values as UserCredentials);
+    this._toggleFormDisabled(true);
+    this._usersController
+      .authorize(values as UserCredentials)
+      .catch(console.log)
+      .finally(() => {
+        this._toggleFormDisabled(false);
+      });
   };
+
+  private _toggleFormDisabled(disabled: boolean) {
+    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
+    for (const input of inputs) {
+      input.setProps({ disabled });
+    }
+    const { submitButton, signUpLink } = this.children;
+    submitButton.setProps({ disabled });
+    signUpLink.setProps({ disabled });
+  }
 }

@@ -6,8 +6,8 @@ import { BlockConstructor, Route } from './Route.ts';
 export enum Routes {
   SignInPage = '/',
   SignUpPage = '/sign-up',
-  MainPage = '/main',
-  EditProfilePage = '/edit-profile',
+  MainPage = '/messenger',
+  EditProfilePage = '/settings',
   ChangePasswordPage = '/change-password',
 }
 

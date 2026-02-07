@@ -1,4 +1,4 @@
-import { User } from '../../api';
+import { User, UserProfile } from '../../api';
 import { UsersController } from '../../controllers';
 import { Block, type BlockProps, Store } from '../../core';
 import { StoreEvents } from '../../core/';
@@ -48,7 +48,7 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
   }
 
   private _loadUserInfo() {
-    this._usersController.getUserInfo();
+    this._usersController.loadData();
   }
 
   private _setHandlers(): void {
@@ -61,8 +61,8 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
   }
 
   private _syncUserInfo = (): void => {
-    const { userInfo } = this._store.getState() as { userInfo?: User };
-    if (!userInfo || this._userInfoSynced) {
+    const { userProfile } = this._store.getState() as { userProfile?: User };
+    if (!userProfile || this._userInfoSynced) {
       return;
     }
 
@@ -74,11 +74,11 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
       }
 
       const key = input.name as keyof User;
-      if (!(key in userInfo)) {
+      if (!(key in userProfile)) {
         continue;
       }
 
-      const rawValue = userInfo[key];
+      const rawValue = userProfile[key];
       const nextValue = rawValue === null ? '' : String(rawValue);
       const currentValue = input.value ?? '';
       if (currentValue !== '' && currentValue !== nextValue) {
@@ -110,9 +110,28 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
     }
 
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
+    this._toggleFormDisabled(true);
 
-    console.log({
-      ...values,
-    });
+    this._usersController
+      .changeProfile(values as UserProfile)
+      .catch(console.log)
+      .finally(() => {
+        this._toggleFormDisabled(false);
+      });
   };
+
+  private _toggleFormDisabled(disabled: boolean) {
+    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
+    for (const input of inputs) {
+      input.setProps({ disabled });
+    }
+    this._toggleSubmitButton(disabled);
+  }
+
+  private _toggleSubmitButton(disabled: boolean) {
+    const { submitButton } = this.children;
+    submitButton.setProps({
+      disabled,
+    });
+  }
 }

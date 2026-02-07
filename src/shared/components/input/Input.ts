@@ -43,6 +43,7 @@ export class Input extends Block<InputProps> {
       value: props.value ?? '',
       isValid: props.isValid ?? true,
       errorMessage: props.errorMessage ?? '',
+      disabled: props.disabled ?? false,
       events: {
         ...(props.events ?? {}),
       },

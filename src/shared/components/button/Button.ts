@@ -14,6 +14,13 @@ type ButtonProps = BlockProps & {
 };
 
 export class Button extends Block<ButtonProps> {
+  constructor(props: ButtonProps) {
+    super({
+      disabled: false,
+      ...props,
+    });
+  }
+
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }

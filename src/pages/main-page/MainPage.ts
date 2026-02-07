@@ -1,5 +1,6 @@
 import { Messenger } from '../../components/messenger';
 import { MessengerSendMessageForm } from '../../components/messenger/send-message-form';
+import { UsersController } from '../../controllers';
 import { Block, type BlockProps, Router, Routes } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
@@ -41,6 +42,19 @@ export class MainPage extends Block<MainPageProps> {
               events: {
                 click: () => {
                   new Router().go(Routes.EditProfilePage);
+                },
+              },
+              settings: {
+                withInternalID: true,
+              },
+            }),
+            logoutButton: new Button({
+              title: 'Выйти из системы',
+              type: 'button',
+              color: 'danger',
+              events: {
+                click: () => {
+                  new UsersController().logout();
                 },
               },
               settings: {

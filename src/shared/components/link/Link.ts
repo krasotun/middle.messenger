@@ -7,6 +7,7 @@ import './Link.css';
 type LinkProps = BlockProps & {
   title: string;
   href: string;
+  disabled?: boolean;
   events?: {
     click?: (event: Event) => void;
   };
@@ -15,6 +16,7 @@ type LinkProps = BlockProps & {
 export class Link extends Block<LinkProps> {
   constructor(props: LinkProps) {
     super({
+      disabled: false,
       ...props,
       events: {
         ...(props.events ?? {}),
@@ -40,7 +42,11 @@ export class Link extends Block<LinkProps> {
   private _handleClick = (event: Event): void => {
     event.preventDefault();
 
-    const { href } = this.props;
+    const { href, disabled } = this.props;
+
+    if (disabled) {
+      return;
+    }
 
     if (!href.startsWith('/')) {
       return;

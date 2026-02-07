@@ -76,7 +76,7 @@ export class HTTPTransport {
     headers: Record<string, string>,
     xhr: XMLHttpRequest,
   ): XMLHttpRequestBodyInit | Document | null => {
-    if (method === HTTPMethod.GET || data === null) {
+    if (method === HTTPMethod.GET || data === null || data === undefined) {
       return null;
     }
 

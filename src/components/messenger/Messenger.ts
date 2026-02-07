@@ -10,6 +10,7 @@ export type MessengerProps = BlockProps & {
   children: {
     changePasswordButton: Button;
     editProfileButton: Button;
+    logoutButton: Button;
     sendMessageForm: MessengerSendMessageForm;
   };
 };

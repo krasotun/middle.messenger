@@ -49,7 +49,7 @@ export class EditProfilePage extends Block<EditProfilePageProps> {
               name: 'display_name',
               label: 'Отображаемое имя',
               type: 'text',
-              validators: [nameValidator()],
+              validators: [],
               settings: {
                 withInternalID: true,
               },
@@ -92,7 +92,7 @@ export class EditProfilePage extends Block<EditProfilePageProps> {
             cancelButton: new Button({
               color: 'secondary',
               type: 'button',
-              title: 'Отменить изменения',
+              title: 'Вернуться назад',
               settings: {
                 withInternalID: true,
               },

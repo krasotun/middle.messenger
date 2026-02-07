@@ -67,6 +67,22 @@ export class SignUpForm extends Block<SignUpFormProps> {
     }
 
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
-    this._usersController.registerUser(values as UserCreate);
+    this._toggleFormDisabled(true);
+    this._usersController
+      .register(values as UserCreate)
+      .catch(console.log)
+      .finally(() => {
+        this._toggleFormDisabled(false);
+      });
   };
+
+  private _toggleFormDisabled(disabled: boolean) {
+    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
+    for (const input of inputs) {
+      input.setProps({ disabled });
+    }
+    const { submitButton, signInLink } = this.children;
+    submitButton.setProps({ disabled });
+    signInLink.setProps({ disabled });
+  }
 }
