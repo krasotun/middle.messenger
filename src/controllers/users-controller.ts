@@ -1,4 +1,11 @@
-import { AuthApi, UserCreate, UserCredentials, UserProfile, UsersApi } from '../api';
+import {
+  AuthApi,
+  UserChangePassword,
+  UserCreate,
+  UserCredentials,
+  UserProfile,
+  UsersApi,
+} from '../api';
 import { Router, Routes, Store } from '../core';
 
 export class UsersController {
@@ -7,42 +14,34 @@ export class UsersController {
   private readonly _router = new Router();
   private readonly _store = new Store();
 
-  register(data: UserCreate) {
-    return this._authApi
-      .signUp(data)
-      .then(() => {
-        console.log('Регистрация успешна');
-        this._router.go(Routes.SignInPage);
-      })
-      .catch((error: unknown) => {
-        console.log(error);
-        throw error;
-      });
+  async register(data: UserCreate) {
+    try {
+      await this._authApi.signUp(data);
+      console.log('Регистрация успешна');
+      this._router.go(Routes.SignInPage);
+    } catch (error: unknown) {
+      console.log(error);
+    }
   }
 
-  authorize(data: UserCredentials) {
-    return this._authApi
-      .signIn(data)
-      .then(() => {
-        console.log('Авторизация успешна');
-        this._router.go(Routes.MainPage);
-      })
-      .then(() => {
-        this.loadData();
-      })
-      .catch((error: unknown) => {
-        console.log(error);
-        throw error;
-      });
+  async authorize(data: UserCredentials) {
+    try {
+      await this._authApi.signIn(data);
+      console.log('Авторизация успешна');
+      this._router.go(Routes.MainPage);
+      await this.loadData();
+    } catch (error: unknown) {
+      console.log(error);
+    }
   }
 
-  loadData() {
-    this._authApi
-      .getUser()
-      .then((userInfo) => {
-        this._store.set('userProfile', userInfo);
-      })
-      .catch(console.log);
+  async loadData() {
+    try {
+      const userInfo = await this._authApi.getUser();
+      this._store.set('userProfile', userInfo);
+    } catch (error: unknown) {
+      console.log(error);
+    }
   }
 
   logout() {
@@ -59,6 +58,14 @@ export class UsersController {
     try {
       const response = await this._usersApi.changeProfile(data);
       this._store.set('userProfile', response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async changePassword(data: UserChangePassword) {
+    try {
+      await this._usersApi.changePassword(data);
     } catch (error) {
       console.log(error);
     }

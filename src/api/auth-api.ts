@@ -24,6 +24,11 @@ export type UserProfile = Pick<
   'first_name' | 'second_name' | 'display_name' | 'login' | 'email' | 'phone'
 >;
 
+export type UserChangePassword = {
+  oldPassword: string;
+  newPassword: string;
+};
+
 export class AuthApi extends BaseApi {
   signUp(data: UserCreate) {
     return this.post('/auth/signup', { data });

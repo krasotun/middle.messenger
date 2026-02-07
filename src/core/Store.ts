@@ -17,6 +17,7 @@ export class Store extends EventBus {
       return Store._instance;
     }
 
+    this.listeners.set(StoreEvents.Updated, []);
     Store._instance = this;
   }
 

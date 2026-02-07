@@ -1,3 +1,5 @@
+import { UserChangePassword } from '../../api';
+import { UsersController } from '../../controllers';
 import { Block, type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
@@ -17,6 +19,8 @@ export type ChangePasswordFormProps = BlockProps & {
 };
 
 export class ChangePasswordForm extends Block<ChangePasswordFormProps> {
+  private readonly _usersController = new UsersController();
+
   constructor(props: ChangePasswordFormProps = {}) {
     const defaultChildren = {
       oldPasswordInput: new Input({
@@ -48,7 +52,12 @@ export class ChangePasswordForm extends Block<ChangePasswordFormProps> {
       cancelButton: new Button({
         color: 'secondary',
         type: 'button',
-        title: 'Отменить изменения',
+        title: 'Вернуться назад',
+        events: {
+          click: () => {
+            this._usersController.goBack();
+          },
+        },
         settings: {
           withInternalID: true,
         },
@@ -98,9 +107,21 @@ export class ChangePasswordForm extends Block<ChangePasswordFormProps> {
     }
 
     const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
-
-    console.log({
-      ...values,
-    });
+    this._toggleFormDisabled(true);
+    this._usersController
+      .changePassword(values as UserChangePassword)
+      .catch(console.log)
+      .finally(() => {
+        this._toggleFormDisabled(false);
+      });
   };
+
+  private _toggleFormDisabled(disabled: boolean) {
+    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
+    for (const input of inputs) {
+      input.setProps({ disabled });
+    }
+    const { submitButton } = this.children;
+    submitButton.setProps({ disabled });
+  }
 }
