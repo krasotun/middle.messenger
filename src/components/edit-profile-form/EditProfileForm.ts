@@ -129,7 +129,6 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
     this._setHandlers();
 
     this._store.on(StoreEvents.Updated, this._syncUserInfo);
-
     this._loadUserInfo();
   }
 
@@ -138,7 +137,7 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
   }
 
   private _loadUserInfo() {
-    this._usersController.loadData();
+    this._usersController.loadData().catch(console.log);
   }
 
   private _setHandlers(): void {

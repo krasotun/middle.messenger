@@ -1,4 +1,5 @@
 import { Messenger } from '../../components/messenger';
+import { AddChatForm } from '../../components/messenger/add-chat-form';
 import { MessengerSendMessageForm } from '../../components/messenger/send-message-form';
 import { UsersController } from '../../controllers';
 import { Block, type BlockProps, Router, Routes } from '../../core';
@@ -22,6 +23,11 @@ export class MainPage extends Block<MainPageProps> {
       children: {
         messenger: new Messenger({
           children: {
+            addChatForm: new AddChatForm({
+              settings: {
+                withInternalID: true,
+              },
+            }),
             changePasswordButton: new Button({
               title: 'Сменить пароль',
               type: 'button',

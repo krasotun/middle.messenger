@@ -20,7 +20,7 @@ enum ValidatorMessage {
 
 export type InputProps = BlockProps & {
   name: string;
-  label: string;
+  label?: string;
   type: 'text' | 'email' | 'password' | 'tel' | 'number' | 'file';
   validators?: ValueValidator[];
   value?: string;
