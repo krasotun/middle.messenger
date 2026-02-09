@@ -10,7 +10,7 @@ const enum Block_Events {
 }
 
 export type BlockProps = Record<string, unknown> & {
-  children?: Record<string, Block>;
+  children?: Record<string, Block | Block[]>;
   events?: Record<string, EventListenerOrEventListenerObject>;
   settings?: { withInternalID?: boolean };
   __id?: string;
@@ -26,6 +26,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   protected readonly props: P;
 
   protected children: Record<string, Block> = {};
+  protected childrenArrays: Record<string, Block[]> = {};
 
   get element(): HTMLElement {
     if (!this._element) {
@@ -35,9 +36,10 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   }
 
   constructor(propsAndChildren = {} as P) {
-    const { children, props } = this._getChildren(propsAndChildren);
+    const { children, childrenArrays, props } = this._getChildren(propsAndChildren);
 
     this.children = children;
+    this.childrenArrays = childrenArrays;
 
     const withId = props.settings?.withInternalID;
 
@@ -93,6 +95,12 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
     Object.values(this.children).forEach((child) => {
       child.dispatchComponentDidMount();
+    });
+
+    Object.values(this.childrenArrays).forEach((list) => {
+      for (const item of list) {
+        item.dispatchComponentDidMount();
+      }
     });
   }
 
@@ -180,8 +188,15 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   private _makePropsProxy(props: P): P {
     return new Proxy(props, {
       set: (target, key: string, value: unknown) => {
-        if (!(key in target)) {
+        if (!(key in target) && key !== 'children') {
           throw new Error('Cannot set property');
+        }
+
+        if (key === 'children') {
+          const nextChildren = value as Record<string, Block | Block[]>;
+          const { children, childrenArrays } = this._splitChildren(nextChildren);
+          this.children = children;
+          this.childrenArrays = childrenArrays;
         }
 
         const oldProps = { ...(target as Record<string, unknown>) } as P;
@@ -206,6 +221,15 @@ export abstract class Block<P extends BlockProps = BlockProps> {
       propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
     });
 
+    Object.entries(this.childrenArrays).forEach(([key, list]) => {
+      propsAndStubs[key] = list.map((item) => {
+        if (!item._id) {
+          throw new Error(`List item in "${key}" must have settings.withInternalID = true`);
+        }
+        return `<div data-id="${item._id}"></div>`;
+      });
+    });
+
     return propsAndStubs;
   }
 
@@ -228,18 +252,47 @@ export abstract class Block<P extends BlockProps = BlockProps> {
       stub.replaceWith(child.element);
     });
 
+    Object.values(this.childrenArrays).forEach((list) => {
+      for (const item of list) {
+        if (!item._id) {
+          continue;
+        }
+        const stub = fragment.content.querySelector(`[data-id="${item._id}"]`);
+        if (!stub) {
+          continue;
+        }
+        stub.replaceWith(item.element);
+      }
+    });
+
     return fragment.content;
   }
 
   private _getChildren(propsAndChildren: P): {
     children: Record<string, Block>;
+    childrenArrays: Record<string, Block[]>;
     props: P;
   } {
     const { children: childrenProp, ...rest } = propsAndChildren as Record<string, unknown> & {
-      children?: Record<string, Block>;
+      children?: Record<string, Block | Block[]>;
     };
-    const children: Record<string, Block> = { ...(childrenProp ?? {}) };
 
-    return { children, props: rest as P };
+    const { children, childrenArrays } = this._splitChildren(childrenProp ?? {});
+    return { children, childrenArrays, props: rest as P };
+  }
+
+  private _splitChildren(childrenProp: Record<string, Block | Block[]>) {
+    const children: Record<string, Block> = {};
+    const childrenArrays: Record<string, Block[]> = {};
+
+    Object.entries(childrenProp).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        childrenArrays[key] = value;
+        return;
+      }
+      children[key] = value;
+    });
+
+    return { children, childrenArrays };
   }
 }

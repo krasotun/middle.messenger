@@ -1,8 +1,12 @@
+import { Nullable } from '../types/nullable.type.ts';
+
 import { BaseApi } from './base-api.ts';
 
 export type Chat = {
   id: number;
   title: string;
+  last_message: Nullable<string>;
+  unread_count: 0;
 };
 
 export type ChatTitle = Pick<Chat, 'title'>;

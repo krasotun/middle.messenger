@@ -2,47 +2,7 @@
     <aside class="messenger__sidebar">
     {{{ addChatForm }}}
         <h1 class="messenger__title">Чаты</h1>
-    <ul class="messenger__chat-list">
-            <li class="messenger__chat-item messenger__chat-item_active">
-                <div class="messenger__chat-avatar" aria-hidden="true"></div>
-                <div class="messenger__chat-content">
-                    <div class="messenger__chat-row">
-                        <div class="messenger__chat-name">Андрей</div>
-                        <div class="messenger__chat-time">12:45</div>
-                    </div>
-                    <div class="messenger__chat-row messenger__chat-row_meta">
-                        <div class="messenger__chat-preview">Привет! Как дела?</div>
-                        <div class="messenger__chat-unread">2</div>
-                    </div>
-                </div>
-            </li>
-            <li class="messenger__chat-item">
-                <div class="messenger__chat-avatar" aria-hidden="true"></div>
-                <div class="messenger__chat-content">
-                    <div class="messenger__chat-row">
-                        <div class="messenger__chat-name">Команда</div>
-                        <div class="messenger__chat-time">10:12</div>
-                    </div>
-                    <div class="messenger__chat-row messenger__chat-row_meta">
-                        <div class="messenger__chat-preview">Созвон в 15:00</div>
-                        <div class="messenger__chat-unread">5</div>
-                    </div>
-                </div>
-            </li>
-            <li class="messenger__chat-item">
-                <div class="messenger__chat-avatar" aria-hidden="true"></div>
-                <div class="messenger__chat-content">
-                    <div class="messenger__chat-row">
-                        <div class="messenger__chat-name">Поддержка</div>
-                        <div class="messenger__chat-time">Вчера</div>
-                    </div>
-                    <div class="messenger__chat-row messenger__chat-row_meta">
-                        <div class="messenger__chat-preview">Ваш тикет в работе</div>
-                        <div class="messenger__chat-unread">1</div>
-                    </div>
-                </div>
-            </li>
-    </ul>
+    {{{ chatList }}}
     <div class="messenger__sidebar-footer">
         {{{ changePasswordButton }}}
         {{{ editProfileButton }}}
