@@ -5,6 +5,7 @@ import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
 
 import { AddChatForm } from './add-chat-form';
+import { ChatHeader } from './chat-header';
 import { ChatList } from './chat-list';
 import template from './Messenger.hbs';
 import { MessengerSendMessageForm } from './send-message-form';
@@ -14,6 +15,7 @@ import './Messenger.css';
 export type MessengerProps = BlockProps & {
   children?: {
     addChatForm?: AddChatForm;
+    chatHeader?: ChatHeader;
     chatList?: ChatList;
     changePasswordButton?: Button;
     editProfileButton?: Button;
@@ -26,6 +28,12 @@ export class Messenger extends Block<MessengerProps> {
   constructor(props: MessengerProps = {}) {
     const defaultChildren = {
       addChatForm: new AddChatForm({
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      chatHeader: new ChatHeader({
+        title: 'Андрей',
         settings: {
           withInternalID: true,
         },

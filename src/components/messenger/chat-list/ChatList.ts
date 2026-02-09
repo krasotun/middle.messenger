@@ -13,7 +13,7 @@ export type ChatListProps = BlockProps & {
 
 export class ChatList extends Block {
   private readonly _store = new Store();
-  private readonly _chatsConroller = new ChatsController();
+  private readonly _chatsController = new ChatsController();
   constructor(props: ChatListProps = {}) {
     super({
       ...props,
@@ -33,6 +33,7 @@ export class ChatList extends Block {
 
   private _syncChats = () => {
     const { chats } = this._store.getState() as { chats?: Chat[] };
+
     if (!Array.isArray(chats)) {
       return;
     }
@@ -52,6 +53,6 @@ export class ChatList extends Block {
   };
 
   private _loadChats() {
-    this._chatsConroller.loadChats().catch(console.log);
+    this._chatsController.loadChats().catch(console.log);
   }
 }
