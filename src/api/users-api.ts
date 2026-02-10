@@ -1,4 +1,4 @@
-import { UserChangePassword, UserProfile } from './auth-api.ts';
+import { User, UserChangePassword, UserProfile } from './auth-api.ts';
 import { BaseApi } from './base-api.ts';
 
 export class UsersApi extends BaseApi {
@@ -8,5 +8,9 @@ export class UsersApi extends BaseApi {
 
   changePassword(data: UserChangePassword) {
     return this.put('/user/password', { data });
+  }
+
+  searchUser(login: string) {
+    return this.post('/user/search', { data: { login } }) as Promise<User[]>;
   }
 }

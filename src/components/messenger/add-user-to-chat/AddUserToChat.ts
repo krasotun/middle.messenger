@@ -1,3 +1,4 @@
+import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
 import { Button } from '../../../shared/components/button';
 import { Input } from '../../../shared/components/input';
@@ -16,6 +17,7 @@ export type AddUserToChatProps = BlockProps & {
 
 export class AddUserToChat extends Block<AddUserToChatProps> {
   private readonly _store = new Store();
+  private readonly _chatsController = new ChatsController();
 
   constructor(props: AddUserToChatProps = {}) {
     const addButton = new Button({
@@ -81,6 +83,9 @@ export class AddUserToChat extends Block<AddUserToChatProps> {
       return;
     }
 
+    const { userLoginInput } = this.children as Required<AddUserToChatProps>['children'];
+    userLoginInput.setProps({ isValid: true, errorMessage: '' });
+
     this._toggleAddButton(target.value.trim().length === 0);
   };
 
@@ -95,10 +100,25 @@ export class AddUserToChat extends Block<AddUserToChatProps> {
       return;
     }
 
-    await this._fakeRequest();
-    userLoginInput.setProps({ value: '' });
-    this._toggleAddButton(true);
-    this._toggleFormDisabled(false);
+    try {
+      const result = await this._chatsController.addUserToChat(value);
+      if (result === 'not_found') {
+        userLoginInput.setProps({
+          isValid: false,
+          errorMessage: 'Пользователь не найден',
+        });
+        return;
+      }
+
+      if (result === 'ok') {
+        userLoginInput.setProps({ value: '', isValid: true, errorMessage: '' });
+        this._toggleAddButton(true);
+      }
+    } catch (error: unknown) {
+      console.log(error);
+    } finally {
+      this._toggleFormDisabled(false);
+    }
   }
 
   private _toggleAddButton(disabled: boolean) {
@@ -113,9 +133,5 @@ export class AddUserToChat extends Block<AddUserToChatProps> {
     }
     const { addButton } = this.children as Required<AddUserToChatProps>['children'];
     addButton.setProps({ disabled });
-  }
-
-  private _fakeRequest(): Promise<void> {
-    return Promise.resolve();
   }
 }

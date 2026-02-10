@@ -46,7 +46,8 @@
 - Prettier — форматирование
 
 
-пользователи
+пользователиp@ssw0rdQAZXSW@@
 
 krasotun
+alcozavr
 p@ssw0rdQAZXSW@@

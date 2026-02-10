@@ -13,6 +13,10 @@ export type ChatTitle = Pick<Chat, 'title'>;
 export type ChatId = Pick<Chat, 'id'>;
 
 export type ActiveChat = Pick<Chat, 'id' | 'title'>;
+export type ChatUsersRequest = {
+  users: number[];
+  chatId: number;
+};
 
 export class ChatsApi extends BaseApi {
   getChats() {
@@ -25,5 +29,9 @@ export class ChatsApi extends BaseApi {
 
   deleteChat(chatId: ChatId) {
     return this.delete('/chats', { data: { chatId: chatId.id } });
+  }
+
+  addUsersToChat(data: ChatUsersRequest) {
+    return this.put('/chats/users', { data });
   }
 }
