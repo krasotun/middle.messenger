@@ -1,0 +1,13 @@
+.add-user-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.add-user-form .button {
+    width: 100%;
+}
+
+.add-user-form_hidden {
+    display: none;
+}
