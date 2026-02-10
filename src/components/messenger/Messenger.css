@@ -58,6 +58,15 @@
         overflow-y: auto;
     }
 
+    &__chat-empty {
+        padding: 16px 12px;
+        border-radius: 8px;
+        background: var(--color-surface-soft);
+        color: var(--color-text-muted);
+        font-size: 13px;
+        text-align: center;
+    }
+
     &__chat-item {
         padding: 12px;
         border-radius: 8px;
@@ -138,6 +147,10 @@
         align-items: center;
         padding-bottom: 16px;
         border-bottom: 1px solid var(--color-border-muted);
+    }
+
+    &__chat-header_hidden {
+        display: none;
     }
 
     &__chat-title {

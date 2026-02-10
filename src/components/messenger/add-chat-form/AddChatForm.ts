@@ -1,4 +1,3 @@
-import { ChatTitle } from '../../../api/chats-api.ts';
 import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps } from '../../../core';
 import { Button } from '../../../shared/components/button';
@@ -87,7 +86,7 @@ export class AddChatForm extends Block<AddChatFormProps> {
     }
 
     this._chatsController
-      .addChat(value as unknown as ChatTitle)
+      .addChat(value)
       .then(() => {
         chatNameInput.setProps({ value: '' });
         this._toggleCreateButton(true);

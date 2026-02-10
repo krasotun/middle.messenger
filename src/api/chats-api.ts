@@ -10,6 +10,7 @@ export type Chat = {
 };
 
 export type ChatTitle = Pick<Chat, 'title'>;
+export type ChatId = Pick<Chat, 'id'>;
 
 export type ActiveChat = Pick<Chat, 'id' | 'title'>;
 
@@ -18,7 +19,11 @@ export class ChatsApi extends BaseApi {
     return this.get('/chats');
   }
 
-  addChat(title: ChatTitle) {
+  addChat(title: string) {
     return this.post('/chats', { data: { title } });
+  }
+
+  deleteChat(chatId: ChatId) {
+    return this.delete('/chats', { data: { chatId: chatId.id } });
   }
 }
