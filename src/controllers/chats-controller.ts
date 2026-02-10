@@ -1,5 +1,5 @@
 import { ChatsApi } from '../api';
-import { ChatTitle } from '../api/chats-api.ts';
+import { ActiveChat, ChatTitle } from '../api/chats-api.ts';
 import { Store } from '../core';
 
 export class ChatsController {
@@ -22,5 +22,9 @@ export class ChatsController {
     } catch (error: unknown) {
       console.log(error);
     }
+  }
+
+  setActiveChat(chat: ActiveChat) {
+    this._store.set('activeChat', chat);
   }
 }

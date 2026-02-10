@@ -11,6 +11,8 @@ export type Chat = {
 
 export type ChatTitle = Pick<Chat, 'title'>;
 
+export type ActiveChat = Pick<Chat, 'id' | 'title'>;
+
 export class ChatsApi extends BaseApi {
   getChats() {
     return this.get('/chats');

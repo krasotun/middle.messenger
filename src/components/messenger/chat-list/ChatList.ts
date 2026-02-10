@@ -1,4 +1,4 @@
-import { Chat } from '../../../api/chats-api.ts';
+import { ActiveChat, Chat } from '../../../api/chats-api.ts';
 import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
 import { ChatListItem } from '../chat-list-item';
@@ -32,7 +32,10 @@ export class ChatList extends Block {
   }
 
   private _syncChats = () => {
-    const { chats } = this._store.getState() as { chats?: Chat[] };
+    const { chats, activeChat } = this._store.getState() as {
+      chats?: Chat[];
+      activeChat?: ActiveChat;
+    };
 
     if (!Array.isArray(chats)) {
       return;
@@ -40,9 +43,11 @@ export class ChatList extends Block {
 
     const items = chats.map((chat) => {
       return new ChatListItem({
+        id: chat.id,
         name: chat.title,
         lastMessage: chat.last_message,
         unreadCount: chat.unread_count,
+        isActive: activeChat?.id === chat.id,
         settings: {
           withInternalID: true,
         },

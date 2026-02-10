@@ -33,7 +33,7 @@ export class Messenger extends Block<MessengerProps> {
         },
       }),
       chatHeader: new ChatHeader({
-        title: 'Андрей',
+        title: 'Выберите чат',
         settings: {
           withInternalID: true,
         },
