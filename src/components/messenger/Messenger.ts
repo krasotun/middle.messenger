@@ -8,8 +8,8 @@ import { AddChatForm } from './add-chat-form';
 import { AddUserToChat } from './add-user-to-chat';
 import { ChatHeader } from './chat-header';
 import { ChatList } from './chat-list';
-import template from './Messenger.hbs';
 import { Messages } from './messages';
+import template from './Messenger.hbs';
 import { MessengerSendMessageForm } from './send-message-form';
 
 import './Messenger.css';

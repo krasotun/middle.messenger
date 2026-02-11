@@ -46,7 +46,8 @@ export class ChatsController {
       const { activeChat } = this._store.getState() as { activeChat?: ActiveChat | null };
       const hasActive = activeChat ? chats.some((chat) => chat.id === activeChat.id) : false;
       if (!hasActive) {
-        this._store.set('activeChat', { id: chats[0].id, title: chats[0].title });
+        const [firstChat] = chats;
+        this.setActiveChat(firstChat);
       }
     } catch (error: unknown) {
       console.log(error);
@@ -55,6 +56,8 @@ export class ChatsController {
 
   setActiveChat(chat: ActiveChat) {
     this._store.set('activeChat', chat);
+
+    this._chatsApi.getChatToken(chat.id).then(console.log).catch(console.log);
   }
 
   async addUserToChat(login: string): Promise<AddUserToChatResult> {

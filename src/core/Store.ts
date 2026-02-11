@@ -29,4 +29,10 @@ export class Store extends EventBus {
   getState() {
     return this._state;
   }
+
+  resetState() {
+    for (const key of Object.keys(this._state)) {
+      this._state[key] = {};
+    }
+  }
 }

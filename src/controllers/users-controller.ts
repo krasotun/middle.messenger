@@ -48,7 +48,7 @@ export class UsersController {
     this._authApi
       .logout()
       .then(() => {
-        this._store.set('userProfile', {});
+        this._store.resetState();
         this._router.go(Routes.SignInPage);
       })
       .catch(console.log);

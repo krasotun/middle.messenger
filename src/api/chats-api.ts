@@ -34,4 +34,8 @@ export class ChatsApi extends BaseApi {
   addUsersToChat(data: ChatUsersRequest) {
     return this.put('/chats/users', { data });
   }
+
+  getChatToken(id: number) {
+    return this.post(`/chats/token/${id.toString()}`, { data: { id } });
+  }
 }
