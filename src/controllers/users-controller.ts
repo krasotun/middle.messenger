@@ -8,11 +8,14 @@ import {
 } from '../api';
 import { Router, Routes, Store } from '../core';
 
+import { ChatsController } from './chats-controller.ts';
+
 export class UsersController {
   private readonly _authApi = new AuthApi();
   private readonly _usersApi = new UsersApi();
   private readonly _router = new Router();
   private readonly _store = new Store();
+  private readonly _chatsController = new ChatsController();
 
   async register(data: UserCreate) {
     try {
@@ -39,6 +42,7 @@ export class UsersController {
     try {
       const userInfo = await this._authApi.getUser();
       this._store.set('userProfile', userInfo);
+      this._chatsController.ensureActiveChatConnection();
     } catch (error: unknown) {
       console.log(error);
     }

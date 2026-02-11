@@ -1,10 +1,8 @@
 <div class="messenger__chat-body">
-    <div class="messenger__message messenger__message_incoming">
-        <div class="messenger__message-text">Привет! Как дела?</div>
-        <div class="messenger__message-time">12:46</div>
-    </div>
-    <div class="messenger__message messenger__message_outgoing">
-        <div class="messenger__message-text">Все отлично, спасибо!</div>
-        <div class="messenger__message-time">12:47</div>
-    </div>
+    {{#each items}}
+        <div class="messenger__message{{#if isOutgoing}} messenger__message_outgoing{{else}} messenger__message_incoming{{/if}}">
+            <div class="messenger__message-text">{{ content }}</div>
+            <div class="messenger__message-time">{{ time }}</div>
+        </div>
+    {{/each}}
 </div>

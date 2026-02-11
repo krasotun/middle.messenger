@@ -14,6 +14,7 @@ export type ChatListProps = BlockProps & {
 export class ChatList extends Block {
   private readonly _store = new Store();
   private readonly _chatsController = new ChatsController();
+  private _lastMessagesUpdatedAt: number | null = null;
   constructor(props: ChatListProps = {}) {
     super({
       ...props,
@@ -32,20 +33,32 @@ export class ChatList extends Block {
   }
 
   private _syncChats = () => {
-    const { chats, activeChat } = this._store.getState() as {
+    const { chats, activeChat, messagesUpdatedAt } = this._store.getState() as {
       chats?: Chat[];
       activeChat?: ActiveChat;
+      messagesUpdatedAt?: number;
     };
+
+    if (
+      typeof messagesUpdatedAt === 'number' &&
+      messagesUpdatedAt !== this._lastMessagesUpdatedAt
+    ) {
+      this._lastMessagesUpdatedAt = messagesUpdatedAt;
+      this._loadChats();
+    }
 
     if (!Array.isArray(chats)) {
       return;
     }
 
     const items = chats.map((chat) => {
+      const lastMessage = chat.last_message?.content ?? null;
+      const time = chat.last_message?.time ? this._formatTime(chat.last_message.time) : undefined;
       return new ChatListItem({
         id: chat.id,
         name: chat.title,
-        lastMessage: chat.last_message,
+        lastMessage,
+        time,
         unreadCount: chat.unread_count,
         isActive: activeChat?.id === chat.id,
         settings: {
@@ -59,5 +72,14 @@ export class ChatList extends Block {
 
   private _loadChats() {
     this._chatsController.loadChats().catch(console.log);
+  }
+
+  private _formatTime(value: string): string {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   }
 }

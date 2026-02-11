@@ -1,12 +1,14 @@
-import { ChatsApi } from '../api';
+import { ChatsApi, User, UsersApi } from '../api';
 import { ActiveChat, Chat, ChatId } from '../api/chats-api.ts';
-import { UsersApi } from '../api/users-api.ts';
 import { Store } from '../core';
+
+import { MessagesController } from './messages-controller.ts';
 
 export type AddUserToChatResult = 'ok' | 'not_found' | 'no_active_chat';
 
 export class ChatsController {
   private readonly _chatsApi = new ChatsApi();
+  private readonly _messagesController = new MessagesController();
   private readonly _usersApi = new UsersApi();
   private readonly _store = new Store();
 
@@ -16,7 +18,7 @@ export class ChatsController {
         id?: number;
       } | null;
       if (response?.id) {
-        this._store.set('activeChat', { id: response.id, title });
+        this.setActiveChat({ id: response.id, title });
       }
       await this.loadChats();
     } catch (error: unknown) {
@@ -28,6 +30,7 @@ export class ChatsController {
     try {
       await this._chatsApi.deleteChat(chatId);
       this._store.set('activeChat', null);
+      this._messagesController.disconnect();
       await this.loadChats();
     } catch (error: unknown) {
       console.log(error);
@@ -56,8 +59,34 @@ export class ChatsController {
 
   setActiveChat(chat: ActiveChat) {
     this._store.set('activeChat', chat);
+    this._connectToChat(chat.id).catch(console.log);
+  }
 
-    this._chatsApi.getChatToken(chat.id).then(console.log).catch(console.log);
+  ensureActiveChatConnection(): void {
+    const { activeChat } = this._store.getState() as { activeChat?: ActiveChat | null };
+    if (!activeChat) {
+      return;
+    }
+
+    this._connectToChat(activeChat.id).catch(console.log);
+  }
+
+  private async _connectToChat(chatId: number) {
+    const { userProfile } = this._store.getState() as { userProfile?: User };
+    if (!userProfile) {
+      return;
+    }
+
+    const tokenResponse = (await this._chatsApi.getChatToken(chatId)) as { token?: string };
+    if (!tokenResponse.token) {
+      return;
+    }
+
+    this._messagesController.connect({
+      userId: userProfile.id,
+      chatId,
+      token: tokenResponse.token,
+    });
   }
 
   async addUserToChat(login: string): Promise<AddUserToChatResult> {

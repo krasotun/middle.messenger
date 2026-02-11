@@ -5,7 +5,10 @@ import { BaseApi } from './base-api.ts';
 export type Chat = {
   id: number;
   title: string;
-  last_message: Nullable<string>;
+  last_message: Nullable<{
+    content?: string;
+    time?: string;
+  }>;
   unread_count: 0;
 };
 

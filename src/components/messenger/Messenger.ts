@@ -1,5 +1,5 @@
 import { UsersController } from '../../controllers';
-import { Block, type BlockProps, Router, Routes } from '../../core';
+import { Block, type BlockProps, Router, Routes, Store } from '../../core';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
@@ -29,6 +29,9 @@ export type MessengerProps = BlockProps & {
 };
 
 export class Messenger extends Block<MessengerProps> {
+  private readonly _store = new Store();
+  private readonly _usersController = new UsersController();
+
   constructor(props: MessengerProps = {}) {
     const defaultChildren = {
       addChatForm: new AddChatForm({
@@ -89,7 +92,7 @@ export class Messenger extends Block<MessengerProps> {
         color: 'danger',
         events: {
           click: () => {
-            new UsersController().logout();
+            this._usersController.logout();
           },
         },
         settings: {
@@ -130,6 +133,11 @@ export class Messenger extends Block<MessengerProps> {
         ...(props.children ?? {}),
       },
     });
+
+    const { userProfile } = this._store.getState() as { userProfile?: unknown };
+    if (!userProfile) {
+      this._usersController.loadData().catch(console.log);
+    }
   }
 
   render(): DocumentFragment {

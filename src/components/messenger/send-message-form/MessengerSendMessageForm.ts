@@ -1,3 +1,4 @@
+import { MessagesController } from '../../../controllers';
 import { Block, type BlockProps } from '../../../core';
 import { Button } from '../../../shared/components/button';
 import { Input } from '../../../shared/components/input';
@@ -14,6 +15,8 @@ export type MessengerSendMessageFormProps = BlockProps & {
 };
 
 export class MessengerSendMessageForm extends Block<MessengerSendMessageFormProps> {
+  private readonly _messagesController = new MessagesController();
+
   constructor(props: MessengerSendMessageFormProps) {
     super({
       ...props,
@@ -47,8 +50,12 @@ export class MessengerSendMessageForm extends Block<MessengerSendMessageFormProp
       return;
     }
 
-    console.log({
-      [messageInput.name]: messageInput.value,
-    });
+    const content = (messageInput.value ?? '').trim();
+    if (!content) {
+      return;
+    }
+
+    this._messagesController.sendMessage(content);
+    messageInput.setProps({ value: '' });
   };
 }
