@@ -9,6 +9,7 @@ import { AddUserToChat } from './add-user-to-chat';
 import { ChatHeader } from './chat-header';
 import { ChatList } from './chat-list';
 import template from './Messenger.hbs';
+import { Messages } from './messages';
 import { MessengerSendMessageForm } from './send-message-form';
 
 import './Messenger.css';
@@ -19,6 +20,7 @@ export type MessengerProps = BlockProps & {
     addUserToChat?: AddUserToChat;
     chatHeader?: ChatHeader;
     chatList?: ChatList;
+    messages?: Messages;
     changePasswordButton?: Button;
     editProfileButton?: Button;
     logoutButton?: Button;
@@ -46,6 +48,11 @@ export class Messenger extends Block<MessengerProps> {
         },
       }),
       chatList: new ChatList({
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      messages: new Messages({
         settings: {
           withInternalID: true,
         },
