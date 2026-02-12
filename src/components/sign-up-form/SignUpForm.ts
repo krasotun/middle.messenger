@@ -48,7 +48,7 @@ export class SignUpForm extends Form<SignUpFormValue> {
     const value = this.rawValue;
 
     this._usersController
-      .signUp(value)
+      .signUpUser(value)
       .catch(console.log)
       .finally(() => {
         this._toggleFormDisabled(false);

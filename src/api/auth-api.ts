@@ -30,11 +30,11 @@ export type UserChangePassword = {
 };
 
 export class AuthApi extends BaseApi {
-  signUp(data: UserCreate) {
+  signUpUser(data: UserCreate) {
     return this.post('/auth/signup', { data });
   }
 
-  signIn(data: UserCredentials) {
+  signInUser(data: UserCredentials) {
     return this.post('/auth/signin', { data });
   }
 

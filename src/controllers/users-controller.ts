@@ -6,6 +6,7 @@ import {
   UserProfile,
   UsersApi,
 } from '../api';
+import { SignInFormValue } from '../components/sign-in-form';
 import { SignUpFormValue } from '../components/sign-up-form';
 import { Router, Routes, Store } from '../core';
 
@@ -18,10 +19,10 @@ export class UsersController {
   private readonly _store = new Store();
   private readonly _chatsController = new ChatsController();
 
-  async signUp(value: SignUpFormValue) {
+  async signUpUser(value: SignUpFormValue) {
     try {
       const payload = this._prepareUserSignUpPayload(value);
-      await this._authApi.signUp(payload);
+      await this._authApi.signUpUser(payload);
 
       console.log('Регистрация успешна');
 
@@ -31,9 +32,10 @@ export class UsersController {
     }
   }
 
-  async authorize(data: UserCredentials) {
+  async signInUser(value: SignInFormValue) {
     try {
-      await this._authApi.signIn(data);
+      const payload = this._prepareUserSignInPayload(value);
+      await this._authApi.signInUser(payload);
       console.log('Авторизация успешна');
 
       this._router.go(Routes.MainPage);
@@ -94,6 +96,13 @@ export class UsersController {
       email: value.email,
       password: value.password,
       phone: value.phone,
+    };
+  }
+
+  private _prepareUserSignInPayload(value: SignInFormValue): UserCredentials {
+    return {
+      login: value.login,
+      password: value.password,
     };
   }
 }
