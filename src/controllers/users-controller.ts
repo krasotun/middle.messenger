@@ -6,6 +6,7 @@ import {
   UserProfile,
   UsersApi,
 } from '../api';
+import { SignUpFormValue } from '../components/sign-up-form';
 import { Router, Routes, Store } from '../core';
 
 import { ChatsController } from './chats-controller.ts';
@@ -17,10 +18,13 @@ export class UsersController {
   private readonly _store = new Store();
   private readonly _chatsController = new ChatsController();
 
-  async register(data: UserCreate) {
+  async signUp(value: SignUpFormValue) {
     try {
-      await this._authApi.signUp(data);
+      const payload = this._prepareUserSignUpPayload(value);
+      await this._authApi.signUp(payload);
+
       console.log('Регистрация успешна');
+
       this._router.go(Routes.SignInPage);
     } catch (error: unknown) {
       console.log(error);
@@ -31,7 +35,9 @@ export class UsersController {
     try {
       await this._authApi.signIn(data);
       console.log('Авторизация успешна');
+
       this._router.go(Routes.MainPage);
+
       await this.loadData();
     } catch (error: unknown) {
       console.log(error);
@@ -42,6 +48,7 @@ export class UsersController {
     try {
       const userInfo = await this._authApi.getUser();
       this._store.set('userProfile', userInfo);
+
       this._chatsController.ensureActiveChatConnection();
     } catch (error: unknown) {
       console.log(error);
@@ -77,5 +84,16 @@ export class UsersController {
 
   goBack() {
     this._router.back();
+  }
+
+  private _prepareUserSignUpPayload(value: SignUpFormValue): UserCreate {
+    return {
+      first_name: value.firstName,
+      second_name: value.secondName,
+      login: value.login,
+      email: value.email,
+      password: value.password,
+      phone: value.phone,
+    };
   }
 }
