@@ -6,6 +6,7 @@ import {
   UserProfile,
   UsersApi,
 } from '../api';
+import { ChangePasswordFormValue } from '../components/change-password-form';
 import { SignInFormValue } from '../components/sign-in-form';
 import { SignUpFormValue } from '../components/sign-up-form';
 import { Router, Routes, Store } from '../core';
@@ -76,9 +77,10 @@ export class UsersController {
     }
   }
 
-  async changePassword(data: UserChangePassword) {
+  async changePassword(value: UserChangePassword) {
     try {
-      await this._usersApi.changePassword(data);
+      const payload = this._prepareChanngePasswordPayload(value);
+      await this._usersApi.changePassword(payload);
     } catch (error) {
       console.log(error);
     }
@@ -103,6 +105,13 @@ export class UsersController {
     return {
       login: value.login,
       password: value.password,
+    };
+  }
+
+  private _prepareChanngePasswordPayload(value: ChangePasswordFormValue): UserChangePassword {
+    return {
+      oldPassword: value.oldPassword,
+      newPassword: value.newPassword,
     };
   }
 }
