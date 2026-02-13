@@ -2,10 +2,9 @@ import { User, UserChangePasswordRequest, UserChangeProfileRequest } from '../mo
 
 import { BaseApi } from './base-api.ts';
 
-
 export class UsersApi extends BaseApi {
-  changeProfile(data: UserChangeProfileRequest) {
-    return this.put('/user/profile', { data });
+  changeProfile(data: UserChangeProfileRequest): Promise<User> {
+    return this.put('/user/profile', { data }) as Promise<User>;
   }
 
   changePassword(data: UserChangePasswordRequest) {

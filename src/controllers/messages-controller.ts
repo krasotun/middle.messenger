@@ -2,7 +2,7 @@ import { MessagesApi } from '../api';
 import { ActiveChat } from '../api/chats-api.ts';
 import { Store } from '../core';
 
-type Message = {
+export type Message = {
   id?: number;
   user_id?: number;
   chat_id?: number;

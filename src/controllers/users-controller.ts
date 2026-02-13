@@ -1,8 +1,6 @@
-import {
-  AuthApi,
-  UsersApi,
-} from '../api';
+import { AuthApi, UsersApi } from '../api';
 import { ChangePasswordFormValue } from '../components/change-password-form';
+import { EditProfileFormValue } from '../components/edit-profile-form';
 import { SignInFormValue } from '../components/sign-in-form';
 import { SignUpFormValue } from '../components/sign-up-form';
 import { Router, Routes, Store } from '../core';
@@ -43,16 +41,18 @@ export class UsersController {
 
       this._router.go(Routes.MainPage);
 
-      await this.loadData();
+      await this.loadUserData();
     } catch (error: unknown) {
       console.log(error);
     }
   }
 
-  async loadData() {
+  async loadUserData() {
     try {
-      const userInfo = await this._authApi.getUser();
-      this._store.set('userProfile', userInfo);
+      const userProfile = await this._authApi.getUser();
+      this._store.set('userProfile', userProfile);
+
+      console.log(this._store.getState());
 
       this._chatsController.ensureActiveChatConnection();
     } catch (error: unknown) {
@@ -70,9 +70,10 @@ export class UsersController {
       .catch(console.log);
   }
 
-  async changeProfile(data: UserChangeProfileRequest) {
+  async changeProfile(value: EditProfileFormValue) {
     try {
-      const response = await this._usersApi.changeProfile(data);
+      const payload = this._prepareChangeProfiledPayload(value);
+      const response = await this._usersApi.changeProfile(payload);
       this._store.set('userProfile', response);
     } catch (error) {
       console.log(error);
@@ -81,7 +82,7 @@ export class UsersController {
 
   async changePassword(value: UserChangePasswordRequest) {
     try {
-      const payload = this._prepareChanngePasswordPayload(value);
+      const payload = this._prepareChangePasswordPayload(value);
       await this._usersApi.changePassword(payload);
     } catch (error) {
       console.log(error);
@@ -110,10 +111,21 @@ export class UsersController {
     };
   }
 
-  private _prepareChanngePasswordPayload(value: ChangePasswordFormValue): UserChangePasswordRequest {
+  private _prepareChangePasswordPayload(value: ChangePasswordFormValue): UserChangePasswordRequest {
     return {
       oldPassword: value.oldPassword,
       newPassword: value.newPassword,
+    };
+  }
+
+  private _prepareChangeProfiledPayload(value: EditProfileFormValue): UserChangeProfileRequest {
+    return {
+      first_name: value.firstName,
+      second_name: value.secondName,
+      display_name: value.displayName,
+      login: value.login,
+      email: value.email,
+      phone: value.phone,
     };
   }
 }

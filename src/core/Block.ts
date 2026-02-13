@@ -53,7 +53,9 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this._eventBus.emit(Block_Events.INIT);
   }
 
-  abstract render(): DocumentFragment;
+  render(): DocumentFragment {
+    throw new Error('Render is not implemented');
+  }
 
   setProps = (nextProps: Partial<BlockProps>) => {
     Object.assign(this.props, nextProps);

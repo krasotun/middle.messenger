@@ -136,7 +136,7 @@ export class Messenger extends Block<MessengerProps> {
 
     const { userProfile } = this._store.getState() as { userProfile?: unknown };
     if (!userProfile) {
-      this._usersController.loadData().catch(console.log);
+      this._usersController.loadUserData().catch(console.log);
     }
   }
 
