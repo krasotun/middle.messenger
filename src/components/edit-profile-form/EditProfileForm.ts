@@ -1,7 +1,7 @@
-import { User, UserProfile } from '../../api';
 import { UsersController } from '../../controllers';
 import { Block, type BlockProps, Store } from '../../core';
 import { StoreEvents } from '../../core/';
+import { User, UserChangeProfileRequest } from '../../model/User.ts';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import {
@@ -202,7 +202,7 @@ export class EditProfileForm extends Block<EditProfileFormProps> {
     this._toggleFormDisabled(true);
 
     this._usersController
-      .changeProfile(values as UserProfile)
+      .changeProfile(values as UserChangeProfileRequest)
       .catch(console.log)
       .finally(() => {
         this._toggleFormDisabled(false);

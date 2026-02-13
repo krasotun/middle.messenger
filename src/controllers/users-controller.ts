@@ -1,15 +1,17 @@
 import {
   AuthApi,
-  UserChangePassword,
-  UserCreate,
-  UserCredentials,
-  UserProfile,
   UsersApi,
 } from '../api';
 import { ChangePasswordFormValue } from '../components/change-password-form';
 import { SignInFormValue } from '../components/sign-in-form';
 import { SignUpFormValue } from '../components/sign-up-form';
 import { Router, Routes, Store } from '../core';
+import {
+  UserChangePasswordRequest,
+  UserSignUpRequest,
+  UserSignInRequest,
+  UserChangeProfileRequest,
+} from '../model/User.ts';
 
 import { ChatsController } from './chats-controller.ts';
 
@@ -23,7 +25,7 @@ export class UsersController {
   async signUpUser(value: SignUpFormValue) {
     try {
       const payload = this._prepareUserSignUpPayload(value);
-      await this._authApi.signUpUser(payload);
+      await this._authApi.signUp(payload);
 
       console.log('Регистрация успешна');
 
@@ -36,7 +38,7 @@ export class UsersController {
   async signInUser(value: SignInFormValue) {
     try {
       const payload = this._prepareUserSignInPayload(value);
-      await this._authApi.signInUser(payload);
+      await this._authApi.signIn(payload);
       console.log('Авторизация успешна');
 
       this._router.go(Routes.MainPage);
@@ -68,7 +70,7 @@ export class UsersController {
       .catch(console.log);
   }
 
-  async changeProfile(data: UserProfile) {
+  async changeProfile(data: UserChangeProfileRequest) {
     try {
       const response = await this._usersApi.changeProfile(data);
       this._store.set('userProfile', response);
@@ -77,7 +79,7 @@ export class UsersController {
     }
   }
 
-  async changePassword(value: UserChangePassword) {
+  async changePassword(value: UserChangePasswordRequest) {
     try {
       const payload = this._prepareChanngePasswordPayload(value);
       await this._usersApi.changePassword(payload);
@@ -90,7 +92,7 @@ export class UsersController {
     this._router.back();
   }
 
-  private _prepareUserSignUpPayload(value: SignUpFormValue): UserCreate {
+  private _prepareUserSignUpPayload(value: SignUpFormValue): UserSignUpRequest {
     return {
       first_name: value.firstName,
       second_name: value.secondName,
@@ -101,14 +103,14 @@ export class UsersController {
     };
   }
 
-  private _prepareUserSignInPayload(value: SignInFormValue): UserCredentials {
+  private _prepareUserSignInPayload(value: SignInFormValue): UserSignInRequest {
     return {
       login: value.login,
       password: value.password,
     };
   }
 
-  private _prepareChanngePasswordPayload(value: ChangePasswordFormValue): UserChangePassword {
+  private _prepareChanngePasswordPayload(value: ChangePasswordFormValue): UserChangePasswordRequest {
     return {
       oldPassword: value.oldPassword,
       newPassword: value.newPassword,

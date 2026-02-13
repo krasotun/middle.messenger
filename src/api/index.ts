@@ -4,10 +4,3 @@ export { UsersApi } from './users-api.ts';
 export { ChatsApi } from './chats-api.ts';
 export { MessagesApi } from './messages-api.ts';
 
-export type {
-  User,
-  UserCreate,
-  UserCredentials,
-  UserProfile,
-  UserChangePassword,
-} from './auth-api.ts';

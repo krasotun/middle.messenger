@@ -1,6 +1,7 @@
-import { ChatsApi, User, UsersApi } from '../api';
+import { ChatsApi, UsersApi } from '../api';
 import { ActiveChat, Chat, ChatId } from '../api/chats-api.ts';
 import { Store } from '../core';
+import { User } from '../model/User.ts';
 
 import { MessagesController } from './messages-controller.ts';
 

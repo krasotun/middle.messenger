@@ -1,12 +1,14 @@
-import { User, UserChangePassword, UserProfile } from './auth-api.ts';
+import { User, UserChangePasswordRequest, UserChangeProfileRequest } from '../model/User.ts';
+
 import { BaseApi } from './base-api.ts';
 
+
 export class UsersApi extends BaseApi {
-  changeProfile(data: UserProfile) {
+  changeProfile(data: UserChangeProfileRequest) {
     return this.put('/user/profile', { data });
   }
 
-  changePassword(data: UserChangePassword) {
+  changePassword(data: UserChangePasswordRequest) {
     return this.put('/user/password', { data });
   }
 
