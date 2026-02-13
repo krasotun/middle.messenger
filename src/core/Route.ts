@@ -18,6 +18,7 @@ export class Route {
     if (!this._block) {
       this._block = new this._viewClass(this._props ?? {});
       renderToDom(this._block.element);
+      this._block.dispatchComponentDidMount();
     }
   }
 
