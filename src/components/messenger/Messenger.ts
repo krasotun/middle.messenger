@@ -1,5 +1,6 @@
 import { UsersController } from '../../controllers';
-import { Block, type BlockProps, Router, Routes, Store } from '../../core';
+import { Block, type BlockProps, connect, Router, Routes, Store } from '../../core';
+import type { AppState } from '../../core/Store.ts';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
@@ -28,6 +29,13 @@ export type MessengerProps = BlockProps & {
   };
 };
 
+const mapStateToProps = (state: AppState) => {
+  const { chats, activeChat } = state;
+  return { chats, activeChat };
+};
+
+const connectedChatList = connect(ChatList, mapStateToProps);
+
 export class Messenger extends Block<MessengerProps> {
   private readonly _store = new Store();
   private readonly _usersController = new UsersController();
@@ -50,10 +58,11 @@ export class Messenger extends Block<MessengerProps> {
           withInternalID: true,
         },
       }),
-      chatList: new ChatList({
+      chatList: new connectedChatList({
         settings: {
           withInternalID: true,
         },
+        chats: [],
       }),
       messages: new Messages({
         settings: {
@@ -132,7 +141,7 @@ export class Messenger extends Block<MessengerProps> {
         ...defaultChildren,
         ...(props.children ?? {}),
       },
-    });
+    } as MessengerProps);
 
     const { userProfile } = this._store.getState() as { userProfile?: unknown };
     if (!userProfile) {

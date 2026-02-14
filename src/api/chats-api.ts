@@ -23,8 +23,8 @@ export type ChatUsersRequest = {
 };
 
 export class ChatsApi extends BaseApi {
-  getChats() {
-    return this.get('/chats');
+  getChats(): Promise<Chat[]> {
+    return this.get('/chats') as Promise<Chat[]>;
   }
 
   createChat(data: CreateChatRequest) {

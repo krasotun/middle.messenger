@@ -1,5 +1,5 @@
 import { ChatsApi, UsersApi } from '../api';
-import { ActiveChat, Chat, ChatId, CreateChatRequest } from '../api/chats-api.ts';
+import { ActiveChat, ChatId, CreateChatRequest } from '../api/chats-api.ts';
 import { AddChatFormValue } from '../components/messenger/add-chat-form/AddChatForm.ts';
 import { Store } from '../core';
 import { User } from '../model/User.ts';
@@ -43,14 +43,14 @@ export class ChatsController {
 
   async loadChats() {
     try {
-      const chats = (await this._chatsApi.getChats()) as Chat[];
+      const chats = await this._chatsApi.getChats();
       this._store.set('chats', chats);
       if (!Array.isArray(chats) || chats.length === 0) {
         this._store.set('activeChat', null);
         return;
       }
 
-      const { activeChat } = this._store.getState() as { activeChat?: ActiveChat | null };
+      const { activeChat } = this._store.getState();
       const hasActive = activeChat ? chats.some((chat) => chat.id === activeChat.id) : false;
       if (!hasActive) {
         const [firstChat] = chats;
@@ -67,7 +67,7 @@ export class ChatsController {
   }
 
   ensureActiveChatConnection(): void {
-    const { activeChat } = this._store.getState() as { activeChat?: ActiveChat | null };
+    const { activeChat } = this._store.getState();
     if (!activeChat) {
       return;
     }
@@ -82,7 +82,7 @@ export class ChatsController {
         return 'not_found';
       }
 
-      const { activeChat } = this._store.getState() as { activeChat?: ActiveChat | null };
+      const { activeChat } = this._store.getState();
       if (!activeChat) {
         return 'no_active_chat';
       }

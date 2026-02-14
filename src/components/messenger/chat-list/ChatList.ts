@@ -1,53 +1,39 @@
 import { ActiveChat, Chat } from '../../../api/chats-api.ts';
 import { ChatsController } from '../../../controllers';
-import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
+import { Block, type BlockProps } from '../../../core';
 import { ChatListItem } from '../chat-list-item';
 
 import template from './ChatList.hbs';
 
 export type ChatListProps = BlockProps & {
-  children?: {
-    items?: ChatListItem[];
-  };
+  chats?: Chat[];
+  activeChat?: ActiveChat | null;
 };
 
-export class ChatList extends Block {
-  private readonly _store = new Store();
+export class ChatList extends Block<ChatListProps> {
   private readonly _chatsController = new ChatsController();
-  private _lastMessagesUpdatedAt: number | null = null;
-  constructor(props: ChatListProps = {}) {
-    super({
-      ...props,
-      children: {
-        items: props.children?.items ?? [],
-      },
-    });
-
-    this._store.on(StoreEvents.Updated, this._syncChats);
-
-    this._loadChats();
-  }
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 
-  private _syncChats = () => {
-    const { chats, activeChat, messagesUpdatedAt } = this._store.getState() as {
-      chats?: Chat[];
-      activeChat?: ActiveChat;
-      messagesUpdatedAt?: number;
-    };
+  protected componentDidMount(): void {
+    this._chatsController.loadChats().catch(console.log);
+    this._syncChats();
+  }
 
-    if (
-      typeof messagesUpdatedAt === 'number' &&
-      messagesUpdatedAt !== this._lastMessagesUpdatedAt
-    ) {
-      this._lastMessagesUpdatedAt = messagesUpdatedAt;
-      this._loadChats();
+  protected componentDidUpdate(oldProps: ChatListProps, newProps: ChatListProps): boolean {
+    if (oldProps.chats !== newProps.chats || oldProps.activeChat !== newProps.activeChat) {
+      this._syncChats();
     }
+    return true;
+  }
+
+  private _syncChats(): void {
+    const { chats, activeChat } = this.props;
 
     if (!Array.isArray(chats)) {
+      this.setProps({ children: { chats: [] } });
       return;
     }
 
@@ -56,7 +42,7 @@ export class ChatList extends Block {
       const time = chat.last_message?.time ? this._formatTime(chat.last_message.time) : undefined;
       return new ChatListItem({
         id: chat.id,
-        name: chat.title,
+        title: chat.title,
         lastMessage,
         time,
         unreadCount: chat.unread_count,
@@ -67,11 +53,7 @@ export class ChatList extends Block {
       });
     });
 
-    this.setProps({ children: { items } });
-  };
-
-  private _loadChats() {
-    this._chatsController.loadChats().catch(console.log);
+    this.setProps({ children: { chats: items } });
   }
 
   private _formatTime(value: string): string {

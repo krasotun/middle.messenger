@@ -6,7 +6,7 @@ import template from './ChatListItem.hbs';
 
 export type ChatListItemProps = BlockProps & {
   id: Chat['id'];
-  name: string;
+  title: string;
   lastMessage?: string | null;
   time?: string;
   unreadCount?: number;
@@ -33,8 +33,8 @@ export class ChatListItem extends Block<ChatListItemProps> {
   }
 
   private _handleClick(_event: Event) {
-    const { id, name } = this.props;
-    const activeChat: ActiveChat = { id, title: name };
+    const { id, title } = this.props;
+    const activeChat: ActiveChat = { id, title };
     this._chatsController.setActiveChat(activeChat);
   }
 }
