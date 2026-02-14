@@ -1,5 +1,6 @@
 import { ChatsApi, UsersApi } from '../api';
-import { ActiveChat, Chat, ChatId } from '../api/chats-api.ts';
+import { ActiveChat, Chat, ChatId, CreateChatRequest } from '../api/chats-api.ts';
+import { AddChatFormValue } from '../components/messenger/add-chat-form/AddChatForm.ts';
 import { Store } from '../core';
 import { User } from '../model/User.ts';
 
@@ -13,13 +14,15 @@ export class ChatsController {
   private readonly _usersApi = new UsersApi();
   private readonly _store = new Store();
 
-  async addChat(title: string) {
+  async createChat(value: AddChatFormValue) {
     try {
-      const response = (await this._chatsApi.addChat(title)) as {
+      const payload = this._prepareCreateChatPayload(value);
+
+      const response = (await this._chatsApi.createChat(payload)) as {
         id?: number;
       } | null;
       if (response?.id) {
-        this.setActiveChat({ id: response.id, title });
+        this.setActiveChat({ id: response.id, title: payload.title });
       }
       await this.loadChats();
     } catch (error: unknown) {
@@ -72,24 +75,6 @@ export class ChatsController {
     this._connectToChat(activeChat.id).catch(console.log);
   }
 
-  private async _connectToChat(chatId: number) {
-    const { userProfile } = this._store.getState() as { userProfile?: User };
-    if (!userProfile) {
-      return;
-    }
-
-    const tokenResponse = (await this._chatsApi.getChatToken(chatId)) as { token?: string };
-    if (!tokenResponse.token) {
-      return;
-    }
-
-    this._messagesController.connect({
-      userId: userProfile.id,
-      chatId,
-      token: tokenResponse.token,
-    });
-  }
-
   async addUserToChat(login: string): Promise<AddUserToChatResult> {
     try {
       const users = await this._usersApi.searchUser(login);
@@ -116,5 +101,29 @@ export class ChatsController {
       console.log(error);
     }
     return 'not_found';
+  }
+
+  private _prepareCreateChatPayload(value: AddChatFormValue): CreateChatRequest {
+    return {
+      title: value.title,
+    };
+  }
+
+  private async _connectToChat(chatId: number) {
+    const { userProfile } = this._store.getState() as { userProfile?: User };
+    if (!userProfile) {
+      return;
+    }
+
+    const tokenResponse = (await this._chatsApi.getChatToken(chatId)) as { token?: string };
+    if (!tokenResponse.token) {
+      return;
+    }
+
+    this._messagesController.connect({
+      userId: userProfile.id,
+      chatId,
+      token: tokenResponse.token,
+    });
   }
 }

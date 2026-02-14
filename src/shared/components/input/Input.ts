@@ -28,6 +28,7 @@ export type InputProps = BlockProps & {
   disabled?: boolean;
   isValid?: boolean;
   errorMessage?: string;
+  onChange?: (value: string) => void;
   events?: {
     input?: (event: Event) => void;
     blur?: (event: Event) => void;
@@ -86,13 +87,17 @@ export class Input extends Block<InputProps> {
     return valueChanged || metaChanged;
   }
 
-  public validate(): boolean {
+  validate(): boolean {
     const value = this.props.value ?? '';
     const invalidValidators = this._collectInvalidValidators(value);
     const isValid = invalidValidators.length === 0;
     const message = this._buildErrorMessage(invalidValidators);
     this.setProps({ isValid, errorMessage: message });
     return isValid;
+  }
+
+  resetValue(): void {
+    this.setProps({ value: '' });
   }
 
   private _collectInvalidValidators(value: string): string[] {
@@ -159,5 +164,6 @@ export class Input extends Block<InputProps> {
   private _handleInputEvents = (event: Event) => {
     const { value } = event.target as HTMLInputElement;
     this.setProps({ value });
+    this.props.onChange?.(value);
   };
 }

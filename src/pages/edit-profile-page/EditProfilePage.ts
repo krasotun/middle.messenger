@@ -1,5 +1,6 @@
 import { EditProfileForm } from '../../components/edit-profile-form';
-import { Block, type BlockProps, Router } from '../../core';
+import { Block, type BlockProps, Router, connect } from '../../core';
+import type { AppState } from '../../core/Store.ts';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import {
@@ -21,11 +22,18 @@ export type EditProfilePageProps = BlockProps & {
   };
 };
 
+const mapStateToProps = (state: AppState) => {
+  const { userProfile } = state;
+  return { userProfile };
+};
+
+const connectedEditProfileForm = connect(EditProfileForm, mapStateToProps);
+
 export class EditProfilePage extends Block<EditProfilePageProps> {
   constructor() {
     super({
       children: {
-        editProfileForm: new EditProfileForm({
+        editProfileForm: new connectedEditProfileForm({
           children: {
             firstNameInput: new Input({
               name: 'firstName',
@@ -107,7 +115,6 @@ export class EditProfilePage extends Block<EditProfilePageProps> {
             withInternalID: true,
           },
           events: {},
-          userProfile: {},
         }),
       },
     } as EditProfilePageProps);

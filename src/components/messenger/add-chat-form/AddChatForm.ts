@@ -1,6 +1,7 @@
 import { ChatsController } from '../../../controllers';
-import { Block, type BlockProps } from '../../../core';
+import type { BlockProps } from '../../../core';
 import { Button } from '../../../shared/components/button';
+import { Form } from '../../../shared/components/form';
 import { Input } from '../../../shared/components/input';
 
 import template from './AddChatForm.hbs';
@@ -9,16 +10,20 @@ import './AddChatForm.css';
 
 export type AddChatFormProps = BlockProps & {
   children?: {
-    chatNameInput: Input;
-    createButton: Button;
+    titleInput: Input;
+    submitButton: Button;
   };
 };
 
-export class AddChatForm extends Block<AddChatFormProps> {
+export type AddChatFormValue = {
+  title: string;
+};
+
+export class AddChatForm extends Form<AddChatFormValue> {
   private readonly _chatsController = new ChatsController();
 
-  constructor(props: AddChatFormProps = {}) {
-    const createChatButton = new Button({
+  constructor(props: AddChatFormProps) {
+    const submitButton = new Button({
       title: 'Создать чат',
       type: 'submit',
       color: 'primary',
@@ -27,87 +32,52 @@ export class AddChatForm extends Block<AddChatFormProps> {
         withInternalID: true,
       },
     });
-    const chatNameInput = new Input({
+    const titleInput = new Input({
       name: 'title',
       type: 'text',
+      value: '',
       placeholder: 'Название чата',
       settings: {
         withInternalID: true,
+      },
+      onChange: (value) => {
+        this._handleTitleInputChange(value);
       },
     });
 
     super({
       ...props,
       children: {
-        chatNameInput,
-        createButton: createChatButton,
-        ...(props.children ?? {}),
+        titleInput,
+        submitButton,
       },
-      events: {
-        ...(props.events ?? {}),
-      },
+      events: {},
     });
-
-    this._setHandlers();
   }
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 
-  private _setHandlers(): void {
-    this.setProps({
-      events: {
-        ...(this.props.events ?? {}),
-        input: this._handleInput,
-        submit: this._handleSubmit.bind(this),
-      },
-    });
-  }
-
-  private _handleInput = (event: Event) => {
-    const target = event.target as HTMLInputElement | null;
-    if (!target || target.name !== 'title') {
-      return;
-    }
-
-    this._toggleCreateButton(target.value.trim().length === 0);
-  };
-
-  private _handleSubmit(event: Event) {
+  override _handleSubmit(event: Event) {
     event.preventDefault();
     this._toggleFormDisabled(true);
 
-    const { chatNameInput } = this.children as Required<AddChatFormProps>['children'];
-    const value = (chatNameInput.value ?? '').trim();
-    if (!value) {
-      this._toggleFormDisabled(false);
-      return;
-    }
+    const value = this.rawValue;
 
     this._chatsController
-      .addChat(value)
+      .createChat(value)
       .then(() => {
-        chatNameInput.setProps({ value: '' });
-        this._toggleCreateButton(true);
+        this._clearAllInputs();
       })
       .catch(console.log)
       .finally(() => {
-        this._toggleFormDisabled(false);
+        this._toggleFormInputsDisabled(false);
       });
   }
 
-  private _toggleCreateButton(disabled: boolean) {
-    const { createButton } = this.children as Required<AddChatFormProps>['children'];
-    createButton.setProps({ disabled });
-  }
-
-  private _toggleFormDisabled(disabled: boolean) {
-    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
-    for (const input of inputs) {
-      input.setProps({ disabled });
-    }
-    const { createButton } = this.children as Required<AddChatFormProps>['children'];
-    createButton.setProps({ disabled });
+  private _handleTitleInputChange(value: string) {
+    const disabled = value.length === 0;
+    this._toggleFormSubmitButtonDisabled(disabled);
   }
 }

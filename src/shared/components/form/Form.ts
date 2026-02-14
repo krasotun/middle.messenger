@@ -16,6 +16,10 @@ export abstract class Form<T> extends Block {
     return Object.values(this.children).filter((child) => child instanceof Input);
   }
 
+  protected get inputs() {
+    return this._inputs;
+  }
+
   protected abstract _handleSubmit(event: Event): void;
 
   private _setSubmit() {

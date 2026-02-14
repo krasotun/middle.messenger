@@ -12,10 +12,11 @@ export type Chat = {
   unread_count: 0;
 };
 
-export type ChatTitle = Pick<Chat, 'title'>;
+export type CreateChatRequest = Pick<Chat, 'title'>;
 export type ChatId = Pick<Chat, 'id'>;
 
 export type ActiveChat = Pick<Chat, 'id' | 'title'>;
+
 export type ChatUsersRequest = {
   users: number[];
   chatId: number;
@@ -26,8 +27,8 @@ export class ChatsApi extends BaseApi {
     return this.get('/chats');
   }
 
-  addChat(title: string) {
-    return this.post('/chats', { data: { title } });
+  createChat(data: CreateChatRequest) {
+    return this.post('/chats', { data });
   }
 
   deleteChat(chatId: ChatId) {
