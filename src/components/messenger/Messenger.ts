@@ -1,3 +1,4 @@
+import { ActiveChat } from '../../api/chats-api.ts';
 import { UsersController } from '../../controllers';
 import { Block, type BlockProps, connect, Router, Routes, Store } from '../../core';
 import type { AppState } from '../../core/Store.ts';
@@ -16,6 +17,8 @@ import { MessengerSendMessageForm } from './send-message-form';
 import './Messenger.css';
 
 export type MessengerProps = BlockProps & {
+  activeChat?: ActiveChat | null;
+  isAddUserVisible?: boolean;
   children?: {
     addChatForm?: CreateChatForm;
     addUserToChat?: AddUserToChat;
@@ -137,6 +140,7 @@ export class Messenger extends Block<MessengerProps> {
 
     super({
       ...props,
+      isAddUserVisible: Boolean(props.activeChat),
       children: {
         ...defaultChildren,
         ...(props.children ?? {}),
@@ -147,6 +151,13 @@ export class Messenger extends Block<MessengerProps> {
     if (!userProfile) {
       this._usersController.loadUserData().catch(console.log);
     }
+  }
+
+  protected componentDidUpdate(oldProps: MessengerProps, newProps: MessengerProps): boolean {
+    if (oldProps.activeChat !== newProps.activeChat) {
+      this.setProps({ isAddUserVisible: Boolean(newProps.activeChat) });
+    }
+    return true;
   }
 
   render(): DocumentFragment {

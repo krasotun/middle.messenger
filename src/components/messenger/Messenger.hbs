@@ -1,7 +1,9 @@
 <section class="messenger">
     <aside class="messenger__sidebar">
     {{{ addChatForm }}}
-    {{{ addUserToChat }}}
+    {{#if isAddUserVisible}}
+        {{{ addUserToChat }}}
+    {{/if}}
         <h1 class="messenger__title">Чаты</h1>
     {{{ chatList }}}
     <div class="messenger__sidebar-footer">

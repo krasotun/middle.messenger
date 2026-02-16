@@ -135,5 +135,4 @@ export class ChatsController {
       login: value.userLogin,
     };
   }
-
 }
