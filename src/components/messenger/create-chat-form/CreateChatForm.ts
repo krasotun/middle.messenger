@@ -4,25 +4,25 @@ import { Button } from '../../../shared/components/button';
 import { Form } from '../../../shared/components/form';
 import { Input } from '../../../shared/components/input';
 
-import template from './AddChatForm.hbs';
+import template from './CreateChatForm.hbs';
 
-import './AddChatForm.css';
+import './CreateChatForm.css';
 
-export type AddChatFormProps = BlockProps & {
+export type CreateChatFormProps = BlockProps & {
   children?: {
     titleInput: Input;
     submitButton: Button;
   };
 };
 
-export type AddChatFormValue = {
+export type CreateChatFormValue = {
   title: string;
 };
 
-export class AddChatForm extends Form<AddChatFormValue> {
+export class CreateChatForm extends Form<CreateChatFormValue> {
   private readonly _chatsController = new ChatsController();
 
-  constructor(props: AddChatFormProps) {
+  constructor(props: CreateChatFormProps) {
     const submitButton = new Button({
       title: 'Создать чат',
       type: 'submit',

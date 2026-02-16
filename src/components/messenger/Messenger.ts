@@ -5,10 +5,10 @@ import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
 
-import { AddChatForm } from './add-chat-form';
 import { AddUserToChat } from './add-user-to-chat';
 import { ChatHeader } from './chat-header';
 import { ChatList } from './chat-list';
+import { CreateChatForm } from './create-chat-form';
 import { Messages } from './messages';
 import template from './Messenger.hbs';
 import { MessengerSendMessageForm } from './send-message-form';
@@ -17,7 +17,7 @@ import './Messenger.css';
 
 export type MessengerProps = BlockProps & {
   children?: {
-    addChatForm?: AddChatForm;
+    addChatForm?: CreateChatForm;
     addUserToChat?: AddUserToChat;
     chatHeader?: ChatHeader;
     chatList?: ChatList;
@@ -42,7 +42,7 @@ export class Messenger extends Block<MessengerProps> {
 
   constructor(props: MessengerProps = {}) {
     const defaultChildren = {
-      addChatForm: new AddChatForm({
+      addChatForm: new CreateChatForm({
         settings: {
           withInternalID: true,
         },

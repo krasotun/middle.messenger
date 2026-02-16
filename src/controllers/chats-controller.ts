@@ -1,6 +1,6 @@
 import { ChatsApi, UsersApi } from '../api';
 import { ActiveChat, ChatId, CreateChatRequest } from '../api/chats-api.ts';
-import { AddChatFormValue } from '../components/messenger/add-chat-form/AddChatForm.ts';
+import { CreateChatFormValue } from '../components/messenger/create-chat-form/CreateChatForm.ts';
 import { Store } from '../core';
 import { User } from '../model/User.ts';
 
@@ -14,7 +14,7 @@ export class ChatsController {
   private readonly _usersApi = new UsersApi();
   private readonly _store = new Store();
 
-  async createChat(value: AddChatFormValue) {
+  async createChat(value: CreateChatFormValue) {
     try {
       const payload = this._prepareCreateChatPayload(value);
 
@@ -103,7 +103,7 @@ export class ChatsController {
     return 'not_found';
   }
 
-  private _prepareCreateChatPayload(value: AddChatFormValue): CreateChatRequest {
+  private _prepareCreateChatPayload(value: CreateChatFormValue): CreateChatRequest {
     return {
       title: value.title,
     };
