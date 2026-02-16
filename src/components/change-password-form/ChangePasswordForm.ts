@@ -42,7 +42,7 @@ export class ChangePasswordForm extends Form<ChangePasswordFormValue> {
       .catch(console.log)
       .finally(() => {
         this._toggleFormDisabled(false);
-        this._clearAllInputs();
+        this._resetAllInputs();
       });
   }
 }

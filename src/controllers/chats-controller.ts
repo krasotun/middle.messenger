@@ -1,8 +1,9 @@
 import { ChatsApi, UsersApi } from '../api';
 import { ActiveChat, ChatId, CreateChatRequest } from '../api/chats-api.ts';
+import { AddUserToChatFormValue } from '../components/messenger/add-user-to-chat/AddUserToChat.ts';
 import { CreateChatFormValue } from '../components/messenger/create-chat-form/CreateChatForm.ts';
 import { Store } from '../core';
-import { User } from '../model/User.ts';
+import { User, UserSearchRequest } from '../model/User.ts';
 
 import { MessagesController } from './messages-controller.ts';
 
@@ -75,9 +76,10 @@ export class ChatsController {
     this._connectToChat(activeChat.id).catch(console.log);
   }
 
-  async addUserToChat(login: string): Promise<AddUserToChatResult> {
+  async addUserToChat(value: AddUserToChatFormValue): Promise<AddUserToChatResult> {
     try {
-      const users = await this._usersApi.searchUser(login);
+      const payload = this._prepareUserSearchPayload(value);
+      const users = await this._usersApi.searchUser(payload);
       if (!Array.isArray(users) || users.length === 0) {
         return 'not_found';
       }
@@ -96,17 +98,12 @@ export class ChatsController {
         users: userIds,
         chatId: activeChat.id,
       });
+
       return 'ok';
     } catch (error: unknown) {
       console.log(error);
     }
     return 'not_found';
-  }
-
-  private _prepareCreateChatPayload(value: CreateChatFormValue): CreateChatRequest {
-    return {
-      title: value.title,
-    };
   }
 
   private async _connectToChat(chatId: number) {
@@ -126,4 +123,17 @@ export class ChatsController {
       token: tokenResponse.token,
     });
   }
+
+  private _prepareCreateChatPayload(value: CreateChatFormValue): CreateChatRequest {
+    return {
+      title: value.title,
+    };
+  }
+
+  private _prepareUserSearchPayload(value: AddUserToChatFormValue): UserSearchRequest {
+    return {
+      login: value.userLogin,
+    };
+  }
+
 }

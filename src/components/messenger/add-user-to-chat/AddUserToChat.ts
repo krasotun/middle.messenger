@@ -1,26 +1,29 @@
 import { ChatsController } from '../../../controllers';
-import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
+import { type BlockProps } from '../../../core';
 import { Button } from '../../../shared/components/button';
+import { Form } from '../../../shared/components/form';
 import { Input } from '../../../shared/components/input';
 
 import template from './AddUserToChat.hbs';
 
 import './AddUserToChat.css';
 
-export type AddUserToChatProps = BlockProps & {
-  isVisible?: boolean;
+export type AddUserToChatFormProps = BlockProps & {
   children?: {
     userLoginInput: Input;
-    addButton: Button;
+    submitButton: Button;
   };
 };
 
-export class AddUserToChat extends Block<AddUserToChatProps> {
-  private readonly _store = new Store();
+export type AddUserToChatFormValue = {
+  userLogin: string;
+};
+
+export class AddUserToChat extends Form<AddUserToChatFormValue> {
   private readonly _chatsController = new ChatsController();
 
-  constructor(props: AddUserToChatProps = {}) {
-    const addButton = new Button({
+  constructor(props: AddUserToChatFormProps = {}) {
+    const submitButton = new Button({
       title: 'Добавить в чат',
       type: 'submit',
       color: 'primary',
@@ -30,108 +33,65 @@ export class AddUserToChat extends Block<AddUserToChatProps> {
       },
     });
     const userLoginInput = new Input({
-      name: 'login',
+      name: 'userLogin',
       type: 'text',
       placeholder: 'Логин пользователя',
       settings: {
         withInternalID: true,
       },
+      onChange: (value: string) => {
+        this._handleLoginInputChange(value);
+      },
     });
 
     super({
-      isVisible: false,
       ...props,
       children: {
         userLoginInput,
-        addButton,
-        ...(props.children ?? {}),
+        submitButton,
       },
-      events: {
-        ...(props.events ?? {}),
-      },
+      events: {},
     });
-
-    this._store.on(StoreEvents.Updated, this._syncChats);
-    this._setHandlers();
   }
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 
-  private _setHandlers(): void {
-    this.setProps({
-      events: {
-        ...(this.props.events ?? {}),
-        input: this._handleInput,
-        submit: (event: Event) => {
-          void this._handleSubmit(event);
-        },
-      },
-    });
-  }
-
-  private _syncChats = () => {
-    const { chats } = this._store.getState() as { chats?: unknown[] };
-    const hasChats = Array.isArray(chats) && chats.length > 0;
-    this.setProps({ isVisible: hasChats });
-  };
-
-  private _handleInput = (event: Event) => {
-    const target = event.target as HTMLInputElement | null;
-    if (!target || target.name !== 'login') {
-      return;
-    }
-
-    const { userLoginInput } = this.children as Required<AddUserToChatProps>['children'];
-    userLoginInput.setProps({ isValid: true, errorMessage: '' });
-
-    this._toggleAddButton(target.value.trim().length === 0);
-  };
-
-  private async _handleSubmit(event: Event) {
+  override _handleSubmit(event: Event) {
     event.preventDefault();
     this._toggleFormDisabled(true);
 
-    const { userLoginInput } = this.children as Required<AddUserToChatProps>['children'];
-    const value = (userLoginInput.value ?? '').trim();
-    if (!value) {
-      this._toggleFormDisabled(false);
-      return;
-    }
+    const value = this.rawValue;
 
-    try {
-      const result = await this._chatsController.addUserToChat(value);
-      if (result === 'not_found') {
-        userLoginInput.setProps({
-          isValid: false,
-          errorMessage: 'Пользователь не найден',
-        });
-        return;
-      }
+    this._chatsController
+      .addUserToChat(value)
+      .then((result) => {
+        console.log(result);
+        if (result === 'not_found') {
+          const { userLoginInput } = this.children as Required<AddUserToChatFormProps>['children'];
+          userLoginInput.setErrorMessage('Пользователь не найден');
+          return;
+        }
 
-      if (result === 'ok') {
-        userLoginInput.setProps({ value: '', isValid: true, errorMessage: '' });
-        this._toggleAddButton(true);
-      }
-    } catch (error: unknown) {
-      console.log(error);
-    } finally {
-      this._toggleFormDisabled(false);
-    }
+        if (result === 'ok') {
+          this._resetAllInputs();
+          this._toggleFormDisabled(true);
+        }
+      })
+      .catch(console.log)
+      .finally(() => {
+        this._toggleFormDisabled(false);
+      });
   }
 
-  private _toggleAddButton(disabled: boolean) {
-    const { addButton } = this.children as Required<AddUserToChatProps>['children'];
-    addButton.setProps({ disabled });
-  }
+  private _handleLoginInputChange(value: string) {
+    const disabled = value.length === 0;
 
-  private _toggleFormDisabled(disabled: boolean) {
-    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
-    for (const input of inputs) {
-      input.setProps({ disabled });
+    if (value.length === 0) {
+      this._resetAllInputs();
     }
-    const { addButton } = this.children as Required<AddUserToChatProps>['children'];
-    addButton.setProps({ disabled });
+
+    this._toggleFormSubmitButtonDisabled(disabled);
   }
 }

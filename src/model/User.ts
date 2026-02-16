@@ -29,3 +29,5 @@ export type UserChangePasswordRequest = {
   oldPassword: string;
   newPassword: string;
 };
+
+export type UserSearchRequest = Pick<User, 'login'>;

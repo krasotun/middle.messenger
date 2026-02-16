@@ -96,8 +96,12 @@ export class Input extends Block<InputProps> {
     return isValid;
   }
 
-  resetValue(): void {
-    this.setProps({ value: '' });
+  clearValueAndValidity(): void {
+    this.setProps({ value: '', isValid: true, errorMessage: '' });
+  }
+
+  setErrorMessage(errorMessage: string) {
+    this.setProps({ isValid: false, errorMessage });
   }
 
   private _collectInvalidValidators(value: string): string[] {

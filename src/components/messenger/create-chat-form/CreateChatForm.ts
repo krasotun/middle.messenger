@@ -68,7 +68,7 @@ export class CreateChatForm extends Form<CreateChatFormValue> {
     this._chatsController
       .createChat(value)
       .then(() => {
-        this._clearAllInputs();
+        this._resetAllInputs();
       })
       .catch(console.log)
       .finally(() => {

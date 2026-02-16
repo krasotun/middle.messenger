@@ -63,11 +63,9 @@ export abstract class Form<T> extends Block {
     submitButton.setProps({ disabled });
   }
 
-  protected _clearAllInputs() {
+  protected _resetAllInputs() {
     this._inputs.forEach((input) => {
-      input.setProps({
-        value: '',
-      });
+      input.clearValueAndValidity();
     });
   }
 }
