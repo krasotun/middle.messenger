@@ -1,4 +1,3 @@
-import { ActiveChat, Chat } from '../../../api/chats-api.ts';
 import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps } from '../../../core';
 
@@ -6,7 +5,7 @@ import template from './ChatListItem.hbs';
 import './ChatListItem.css';
 
 export type ChatListItemProps = BlockProps & {
-  id: Chat['id'];
+  id: number;
   title: string;
   lastMessage?: string | null;
   time?: string;
@@ -35,7 +34,7 @@ export class ChatListItem extends Block<ChatListItemProps> {
 
   private _handleClick(_event: Event) {
     const { id, title } = this.props;
-    const activeChat: ActiveChat = { id, title };
+    const activeChat = { id, title };
     this._chatsController.setActiveChat(activeChat);
   }
 }

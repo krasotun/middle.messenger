@@ -1,10 +1,11 @@
-import { ActiveChat } from '../../api/chats-api.ts';
 import { UsersController } from '../../controllers';
 import { Block, type BlockProps, connect, Router, Routes, Store } from '../../core';
 import type { AppState } from '../../core/Store.ts';
+import { ActiveChat } from '../../model/Chat.ts';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { requiredValidator } from '../../shared/validators';
+import { Nullable } from '../../types/nullable.type.ts';
 
 import { AddUserToChat } from './add-user-to-chat';
 import { ChatHeader } from './chat-header';
@@ -17,7 +18,7 @@ import { MessengerSendMessageForm } from './send-message-form';
 import './Messenger.css';
 
 export type MessengerProps = BlockProps & {
-  activeChat?: ActiveChat | null;
+  activeChat?: Nullable<ActiveChat>;
   isAddUserVisible?: boolean;
   children?: {
     addChatForm?: CreateChatForm;

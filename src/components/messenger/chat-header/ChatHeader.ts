@@ -1,9 +1,11 @@
-import { ActiveChat, Chat } from '../../../api/chats-api.ts';
 import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
+import { ActiveChat, Chat } from '../../../model/Chat.ts';
 import { Button } from '../../../shared/components/button';
+import { Nullable } from '../../../types/nullable.type.ts';
 
 import template from './ChatHeader.hbs';
+
 import './ChatHeader.css';
 
 export type ChatHeaderProps = BlockProps & {
@@ -59,7 +61,7 @@ export class ChatHeader extends Block<ChatHeaderProps> {
 
   private _syncActiveChat = () => {
     const { activeChat, chats } = this._store.getState() as {
-      activeChat?: ActiveChat | null;
+      activeChat?: Nullable<ActiveChat>;
       chats?: Chat[];
     };
     const { deleteButton } = this.children;

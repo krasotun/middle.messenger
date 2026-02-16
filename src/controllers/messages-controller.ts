@@ -1,5 +1,4 @@
 import { MessagesApi } from '../api';
-import { ActiveChat } from '../api/chats-api.ts';
 import { Store } from '../core';
 
 export type Message = {
@@ -59,7 +58,7 @@ export class MessagesController {
   }
 
   connectToActiveChat(userId: number, token: string): void {
-    const { activeChat } = this._store.getState() as { activeChat?: ActiveChat | null };
+    const { activeChat } = this._store.getState();
     if (!activeChat) {
       return;
     }

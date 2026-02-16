@@ -1,8 +1,8 @@
 import { ChatsApi, UsersApi } from '../api';
-import { ActiveChat, ChatId, CreateChatRequest } from '../api/chats-api.ts';
 import { AddUserToChatFormValue } from '../components/messenger/add-user-to-chat/AddUserToChat.ts';
 import { CreateChatFormValue } from '../components/messenger/create-chat-form/CreateChatForm.ts';
 import { Store } from '../core';
+import { ActiveChat, ChatId, CreateChatRequest } from '../model/Chat.ts';
 import { User, UserSearchRequest } from '../model/User.ts';
 
 import { MessagesController } from './messages-controller.ts';

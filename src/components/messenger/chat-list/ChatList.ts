@@ -1,14 +1,16 @@
-import { ActiveChat, Chat } from '../../../api/chats-api.ts';
 import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps } from '../../../core';
+import { ActiveChat, Chat } from '../../../model/Chat.ts';
+import { Nullable } from '../../../types/nullable.type.ts';
 import { ChatListItem } from '../chat-list-item';
 
 import template from './ChatList.hbs';
+
 import './ChatList.css';
 
 export type ChatListProps = BlockProps & {
   chats?: Chat[];
-  activeChat?: ActiveChat | null;
+  activeChat?: Nullable<ActiveChat>;
 };
 
 export class ChatList extends Block<ChatListProps> {

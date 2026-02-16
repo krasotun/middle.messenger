@@ -1,5 +1,5 @@
-import { ActiveChat, Chat } from '../api/chats-api.ts';
 import { Message } from '../controllers/messages-controller.ts';
+import { ActiveChat, Chat } from '../model/Chat.ts';
 import { User } from '../model/User.ts';
 import { Nullable } from '../types/nullable.type.ts';
 
@@ -11,7 +11,7 @@ export enum StoreEvents {
 
 export type AppState = {
   userProfile?: User;
-  activeChat?: ActiveChat | null;
+  activeChat?: Nullable<ActiveChat>;
   chats?: Chat[];
   messages?: Record<number, Message[]>;
   messagesUpdatedAt?: number;
