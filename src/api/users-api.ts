@@ -16,6 +16,10 @@ export class UsersApi extends BaseApi {
     return this.put('/user/password', { data });
   }
 
+  changeAvatar(data: FormData): Promise<User> {
+    return this.put('/user/profile/avatar', { data }) as Promise<User>;
+  }
+
   searchUser(data: UserSearchRequest) {
     return this.post('/user/search', { data }) as Promise<User[]>;
   }

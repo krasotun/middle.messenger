@@ -26,6 +26,7 @@ export type MessengerProps = BlockProps & {
     chatList?: ChatList;
     messages?: Messages;
     changePasswordButton?: Button;
+    changeAvatarButton?: Button;
     editProfileButton?: Button;
     logoutButton?: Button;
     sendMessageForm?: MessengerSendMessageForm;
@@ -79,6 +80,19 @@ export class Messenger extends Block<MessengerProps> {
         events: {
           click: () => {
             new Router().go(Routes.ChangePasswordPage);
+          },
+        },
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      changeAvatarButton: new Button({
+        title: 'Сменить аватар',
+        type: 'button',
+        color: 'secondary',
+        events: {
+          click: () => {
+            new Router().go(Routes.ChangeAvatarPage);
           },
         },
         settings: {

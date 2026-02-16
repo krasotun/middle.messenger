@@ -9,6 +9,7 @@ export enum Routes {
   MainPage = '/messenger',
   EditProfilePage = '/settings',
   ChangePasswordPage = '/change-password',
+  ChangeAvatarPage = '/change-avatar',
 }
 
 export class Router {

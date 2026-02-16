@@ -41,7 +41,8 @@ export class CreateChatForm extends Form<CreateChatFormValue> {
         withInternalID: true,
       },
       onChange: (value) => {
-        this._handleTitleInputChange(value);
+        const nextValue = typeof value === 'string' ? value : '';
+        this._handleTitleInputChange(nextValue);
       },
     });
 

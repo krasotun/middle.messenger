@@ -1,4 +1,5 @@
 import { Router, Routes } from './core/';
+import { ChangeAvatarPage } from './pages/change-avatar-page';
 import { ChangePasswordPage } from './pages/change-password-page';
 import { EditProfilePage } from './pages/edit-profile-page';
 import { MainPage } from './pages/main-page';
@@ -15,6 +16,7 @@ export default () => {
   router.use(Routes.MainPage, MainPage, {});
   router.use(Routes.EditProfilePage, EditProfilePage, {});
   router.use(Routes.ChangePasswordPage, ChangePasswordPage, {});
+  router.use(Routes.ChangeAvatarPage, ChangeAvatarPage, {});
 
   router.start();
 };

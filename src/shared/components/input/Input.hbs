@@ -6,7 +6,7 @@
     type="{{ type }}"
     id="{{ name }}"
     name="{{ name }}"
-    value="{{ value }}"
+    {{#unless isFile}}value="{{ value }}"{{/unless}}
     placeholder="{{ placeholder }}"
     {{#if disabled}}disabled="disabled"{{/if}}
   >

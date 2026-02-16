@@ -89,6 +89,15 @@ export class UsersController {
     }
   }
 
+  async changeAvatar(formData: FormData) {
+    try {
+      const response = await this._usersApi.changeAvatar(formData);
+      this._store.set('userProfile', response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   goBack() {
     this._router.back();
   }

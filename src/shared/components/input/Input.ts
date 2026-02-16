@@ -23,12 +23,13 @@ export type InputProps = BlockProps & {
   label?: string;
   type: 'text' | 'email' | 'password' | 'tel' | 'number' | 'file';
   validators?: ValueValidator[];
-  value?: string;
+  value?: string | FileList | null;
   placeholder?: string;
   disabled?: boolean;
   isValid?: boolean;
   errorMessage?: string;
-  onChange?: (value: string) => void;
+  isFile?: boolean;
+  onChange?: (value: string | FileList | null) => void;
   events?: {
     input?: (event: Event) => void;
     blur?: (event: Event) => void;
@@ -42,6 +43,7 @@ export class Input extends Block<InputProps> {
     super({
       ...props,
       value: props.value ?? '',
+      isFile: props.type === 'file',
       isValid: props.isValid ?? true,
       errorMessage: props.errorMessage ?? '',
       disabled: props.disabled ?? false,
@@ -57,7 +59,7 @@ export class Input extends Block<InputProps> {
     return this.props.name;
   }
 
-  get value(): string | undefined {
+  get value(): string | FileList | null | undefined {
     return this.props.value;
   }
 
@@ -80,6 +82,10 @@ export class Input extends Block<InputProps> {
     const metaChanged = metaKeys.some((key) => oldProps[key] !== newProps[key]);
     const valueChanged = oldProps.value !== newProps.value;
 
+    if (this.props.type === 'file' && valueChanged && !metaChanged) {
+      return false;
+    }
+
     if (valueChanged && !metaChanged && this._isFocused) {
       return false;
     }
@@ -88,7 +94,7 @@ export class Input extends Block<InputProps> {
   }
 
   validate(): boolean {
-    const value = this.props.value ?? '';
+    const value = typeof this.props.value === 'string' ? this.props.value : '';
     const invalidValidators = this._collectInvalidValidators(value);
     const isValid = invalidValidators.length === 0;
     const message = this._buildErrorMessage(invalidValidators);
@@ -97,7 +103,8 @@ export class Input extends Block<InputProps> {
   }
 
   clearValueAndValidity(): void {
-    this.setProps({ value: '', isValid: true, errorMessage: '' });
+    const value = this.props.type === 'file' ? null : '';
+    this.setProps({ value, isValid: true, errorMessage: '' });
   }
 
   setErrorMessage(errorMessage: string) {
@@ -149,6 +156,7 @@ export class Input extends Block<InputProps> {
         ...(this.props.events ?? {}),
         'focus:input': this._handleFocusEvents,
         'input:input': this._handleInputEvents,
+        'change:input': this._handleInputEvents,
         'blur:input': this._handleBlurEvents,
       },
     });
@@ -156,8 +164,9 @@ export class Input extends Block<InputProps> {
 
   private _handleBlurEvents = (event: Event) => {
     this._isFocused = false;
-    const { value } = event.target as HTMLInputElement;
-    this.setProps({ value });
+    const input = event.target as HTMLInputElement;
+    const nextValue = this.props.type === 'file' ? input.files : input.value;
+    this.setProps({ value: nextValue });
     this.validate();
   };
 
@@ -166,8 +175,9 @@ export class Input extends Block<InputProps> {
   };
 
   private _handleInputEvents = (event: Event) => {
-    const { value } = event.target as HTMLInputElement;
-    this.setProps({ value });
-    this.props.onChange?.(value);
+    const input = event.target as HTMLInputElement;
+    const nextValue = this.props.type === 'file' ? input.files : input.value;
+    this.setProps({ value: nextValue });
+    this.props.onChange?.(nextValue);
   };
 }

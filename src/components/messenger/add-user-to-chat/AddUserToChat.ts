@@ -39,8 +39,9 @@ export class AddUserToChat extends Form<AddUserToChatFormValue> {
       settings: {
         withInternalID: true,
       },
-      onChange: (value: string) => {
-        this._handleLoginInputChange(value);
+      onChange: (value) => {
+        const nextValue = typeof value === 'string' ? value : '';
+        this._handleLoginInputChange(nextValue);
       },
     });
 

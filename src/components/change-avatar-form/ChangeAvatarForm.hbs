@@ -1,0 +1,14 @@
+<form class="change-avatar-form">
+    <div class="change-avatar__preview">
+        {{#if avatarUrl}}
+            <img class="change-avatar__image" src="{{ avatarUrl }}" alt="Аватар" />
+        {{else}}
+            <div class="change-avatar__placeholder">Аватар</div>
+        {{/if}}
+    </div>
+    <div class="change-avatar__controls">
+        {{{ avatarInput }}}
+        {{{ submitButton }}}
+        {{{ cancelButton }}}
+    </div>
+</form>

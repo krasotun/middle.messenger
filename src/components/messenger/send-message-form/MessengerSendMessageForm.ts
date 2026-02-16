@@ -50,7 +50,8 @@ export class MessengerSendMessageForm extends Block<MessengerSendMessageFormProp
       return;
     }
 
-    const content = (messageInput.value ?? '').trim();
+    const raw = typeof messageInput.value === 'string' ? messageInput.value : '';
+    const content = raw.trim();
     if (!content) {
       return;
     }
