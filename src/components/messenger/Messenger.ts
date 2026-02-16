@@ -1,5 +1,5 @@
 import { UsersController } from '../../controllers';
-import { Block, type BlockProps, connect, Router, Routes, Store } from '../../core';
+import { Block, type BlockProps, connect, Router, Routes } from '../../core';
 import type { AppState } from '../../core/Store.ts';
 import { ActiveChat } from '../../model/Chat.ts';
 import { Button } from '../../shared/components/button';
@@ -42,7 +42,6 @@ const mapStateToProps = (state: AppState) => {
 const connectedChatList = connect(ChatList, mapStateToProps);
 
 export class Messenger extends Block<MessengerProps> {
-  private readonly _store = new Store();
   private readonly _usersController = new UsersController();
 
   constructor(props: MessengerProps = {}) {
@@ -161,11 +160,6 @@ export class Messenger extends Block<MessengerProps> {
         ...(props.children ?? {}),
       },
     } as MessengerProps);
-
-    const { userProfile } = this._store.getState() as { userProfile?: unknown };
-    if (!userProfile) {
-      this._usersController.loadUserData().catch(console.log);
-    }
   }
 
   protected componentDidUpdate(oldProps: MessengerProps, newProps: MessengerProps): boolean {

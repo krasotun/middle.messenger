@@ -1,6 +1,6 @@
 import { ChangeAvatarForm } from '../../components/change-avatar-form';
 import { UsersController } from '../../controllers';
-import { Block, type BlockProps, connect, Store } from '../../core';
+import { Block, type BlockProps, connect } from '../../core';
 import type { AppState } from '../../core/Store.ts';
 import { Button } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
@@ -22,7 +22,6 @@ const mapStateToProps = (state: AppState) => {
 const ConnectedChangeAvatarForm = connect(ChangeAvatarForm, mapStateToProps);
 
 export class ChangeAvatarPage extends Block<ChangeAvatarPageProps> {
-  private readonly _store = new Store();
   private readonly _usersController = new UsersController();
 
   constructor() {
@@ -78,13 +77,6 @@ export class ChangeAvatarPage extends Block<ChangeAvatarPageProps> {
         }),
       },
     } as ChangeAvatarPageProps);
-  }
-
-  protected componentDidMount(): void {
-    const { userProfile } = this._store.getState() as { userProfile?: unknown };
-    if (!userProfile) {
-      this._usersController.loadUserData().catch(console.log);
-    }
   }
 
   render(): DocumentFragment {
