@@ -1,0 +1,22 @@
+.messenger {
+    &__chat-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    &__chat-empty {
+        padding: 16px 12px;
+        border-radius: 8px;
+        background: var(--color-surface-soft);
+        color: var(--color-text-muted);
+        font-size: 13px;
+        text-align: center;
+    }
+}

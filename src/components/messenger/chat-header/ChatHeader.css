@@ -1,0 +1,38 @@
+.messenger {
+    &__chat-header {
+        display: grid;
+        grid-template-columns: 40px 1fr auto;
+        column-gap: 12px;
+        align-items: center;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--color-border-muted);
+    }
+
+    &__chat-header_hidden {
+        display: none;
+    }
+
+    &__chat-title {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    &__chat-header-content {
+        display: flex;
+        align-items: center;
+    }
+
+    &__chat-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--color-surface-avatar);
+        align-self: center;
+
+        &_large {
+            align-self: center;
+            width: 40px;
+            height: 40px;
+        }
+    }
+}

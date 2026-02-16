@@ -3,6 +3,7 @@ import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps } from '../../../core';
 
 import template from './ChatListItem.hbs';
+import './ChatListItem.css';
 
 export type ChatListItemProps = BlockProps & {
   id: Chat['id'];

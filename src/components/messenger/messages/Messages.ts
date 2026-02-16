@@ -9,6 +9,7 @@ type MessageItem = {
 type MessagesState = Record<number, Array<{ content?: string; time?: string; user_id?: number }>>;
 
 import template from './Messages.hbs';
+import './Messages.css';
 
 export type MessagesProps = BlockProps & {
   items?: MessageItem[];

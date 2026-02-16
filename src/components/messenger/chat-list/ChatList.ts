@@ -4,6 +4,7 @@ import { Block, type BlockProps } from '../../../core';
 import { ChatListItem } from '../chat-list-item';
 
 import template from './ChatList.hbs';
+import './ChatList.css';
 
 export type ChatListProps = BlockProps & {
   chats?: Chat[];

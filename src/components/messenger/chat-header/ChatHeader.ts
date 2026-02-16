@@ -4,6 +4,7 @@ import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
 import { Button } from '../../../shared/components/button';
 
 import template from './ChatHeader.hbs';
+import './ChatHeader.css';
 
 export type ChatHeaderProps = BlockProps & {
   title: string;
