@@ -1,9 +1,9 @@
 import { UsersController } from '../../controllers';
 import { BlockProps } from '../../core';
 import type { User } from '../../model/User.ts';
-import type { Button } from '../../shared/components/button';
+import { Button } from '../../shared/components/button';
 import { Form } from '../../shared/components/form';
-import type { Input } from '../../shared/components/input';
+import { Input } from '../../shared/components/input';
 
 import template from './ChangeAvatarForm.hbs';
 
@@ -26,8 +26,66 @@ export type ChangeAvatarFormValue = {
 export class ChangeAvatarForm extends Form<ChangeAvatarFormValue> {
   private readonly _usersController = new UsersController();
 
+  constructor(props: BlockProps) {
+    const submitButton = new Button({
+      title: 'Сменить аватар',
+      type: 'submit',
+      color: 'primary',
+      disabled: true,
+      settings: {
+        withInternalID: true,
+      },
+    });
+
+    const avatarInput = new Input({
+      name: 'avatar',
+      label: 'Выберите файл',
+      type: 'file',
+      onChange: (value) => {
+        this._handleAvatarChange(value, submitButton);
+      },
+      settings: {
+        withInternalID: true,
+      },
+    });
+
+    const cancelButton = new Button({
+      color: 'secondary',
+      type: 'button',
+      title: 'Вернуться назад',
+      events: {
+        click: () => {
+          this._usersController.goBack();
+        },
+      },
+      settings: {
+        withInternalID: true,
+      },
+    });
+
+    super({
+      ...(props as ChangeAvatarFormProps),
+      children: {
+        avatarInput,
+        submitButton,
+        cancelButton,
+      },
+      events: {},
+    });
+  }
+
   render(): DocumentFragment {
     return this.renderTemplate(template);
+  }
+
+  private _handleAvatarChange(value: string | FileList | null, submitButton: Button): void {
+    const files = value && typeof value !== 'string' ? value : null;
+    const hasFile = Boolean(files && files.length > 0);
+    if (hasFile) {
+      submitButton.enable();
+      return;
+    }
+    submitButton.disable();
   }
 
   protected componentDidMount(): void {

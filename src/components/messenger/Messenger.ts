@@ -19,7 +19,6 @@ import './Messenger.css';
 
 export type MessengerProps = BlockProps & {
   activeChat?: Nullable<ActiveChat>;
-  isAddUserVisible?: boolean;
   children?: {
     addChatForm?: CreateChatForm;
     addUserToChat?: AddUserToChat;
@@ -34,12 +33,29 @@ export type MessengerProps = BlockProps & {
   };
 };
 
-const mapStateToProps = (state: AppState) => {
+const mapStateToChatListProps = (state: AppState) => {
   const { chats, activeChat } = state;
   return { chats, activeChat };
 };
 
-const connectedChatList = connect(ChatList, mapStateToProps);
+const mapStateToChatHeaderProps = (state: AppState) => {
+  const { activeChat } = state;
+  return { activeChat };
+};
+
+const mapStateToMessagesProps = (state: AppState) => {
+  const { messages, messagesUpdatedAt, activeChat, userProfile } = state;
+  return { messages, messagesUpdatedAt, activeChat, userProfile };
+};
+
+const connectedChatList = connect(ChatList, mapStateToChatListProps);
+
+const connectedChatHeader = connect(
+  ChatHeader as unknown as new (props: BlockProps) => Block,
+  mapStateToChatHeaderProps,
+);
+
+const connectedMessages = connect(Messages, mapStateToMessagesProps);
 
 export class Messenger extends Block<MessengerProps> {
   private readonly _usersController = new UsersController();
@@ -56,7 +72,7 @@ export class Messenger extends Block<MessengerProps> {
           withInternalID: true,
         },
       }),
-      chatHeader: new ChatHeader({
+      chatHeader: new connectedChatHeader({
         title: 'Выберите чат',
         settings: {
           withInternalID: true,
@@ -68,7 +84,7 @@ export class Messenger extends Block<MessengerProps> {
         },
         chats: [],
       }),
-      messages: new Messages({
+      messages: new connectedMessages({
         settings: {
           withInternalID: true,
         },
@@ -154,7 +170,6 @@ export class Messenger extends Block<MessengerProps> {
 
     super({
       ...props,
-      isAddUserVisible: Boolean(props.activeChat),
       children: {
         ...defaultChildren,
         ...(props.children ?? {}),
@@ -164,7 +179,7 @@ export class Messenger extends Block<MessengerProps> {
 
   protected componentDidUpdate(oldProps: MessengerProps, newProps: MessengerProps): boolean {
     if (oldProps.activeChat !== newProps.activeChat) {
-      this.setProps({ isAddUserVisible: Boolean(newProps.activeChat) });
+      this.setProps({ activeChat: newProps.activeChat });
     }
     return true;
   }

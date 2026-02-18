@@ -1,41 +1,30 @@
 import { ChatsController } from '../../../controllers';
-import { Block, type BlockProps, Store, StoreEvents } from '../../../core';
-import { ActiveChat, Chat } from '../../../model/Chat.ts';
+import { Block, type BlockProps } from '../../../core';
+import { ActiveChat } from '../../../model/Chat.ts';
 import { Button } from '../../../shared/components/button';
-import { Nullable } from '../../../types/nullable.type.ts';
 
 import template from './ChatHeader.hbs';
 
 import './ChatHeader.css';
 
 export type ChatHeaderProps = BlockProps & {
-  title: string;
-  emptyTitle?: string;
-  isVisible?: boolean;
+  title?: string;
+  activeChat?: ActiveChat | null;
   children?: {
     deleteButton: Button;
   };
 };
 
 export class ChatHeader extends Block<ChatHeaderProps> {
-  private readonly _store = new Store();
   private readonly _chatsController = new ChatsController();
 
-  constructor(props: ChatHeaderProps) {
+  constructor(props: BlockProps) {
     const defaultChildren = {
       deleteButton: new Button({
         title: 'Удалить чат',
         type: 'button',
         color: 'danger',
-        events: {
-          click: () => {
-            const { activeChat } = this._store.getState() as { activeChat?: ActiveChat };
-            if (!activeChat) {
-              return;
-            }
-            this._chatsController.deleteChat({ id: activeChat.id }).catch(console.log);
-          },
-        },
+        events: {},
         settings: {
           withInternalID: true,
         },
@@ -43,50 +32,80 @@ export class ChatHeader extends Block<ChatHeaderProps> {
     };
 
     super({
-      emptyTitle: 'Выберите чат',
-      isVisible: true,
-      ...props,
+      ...(props as ChatHeaderProps),
       children: {
         ...defaultChildren,
-        ...(props.children ?? {}),
+        ...((props as ChatHeaderProps).children ?? {}),
       },
     });
 
-    this._store.on(StoreEvents.Updated, this._syncActiveChat);
+    this._setHandlers();
   }
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 
+  protected componentDidMount(): void {
+    this._syncActiveChat();
+  }
+
+  protected componentDidUpdate(oldProps: ChatHeaderProps, newProps: ChatHeaderProps): boolean {
+    if (oldProps.activeChat !== newProps.activeChat) {
+      this._syncActiveChat();
+    }
+    return true;
+  }
+
   private _syncActiveChat = () => {
-    const { activeChat, chats } = this._store.getState() as {
-      activeChat?: Nullable<ActiveChat>;
-      chats?: Chat[];
-    };
-    const { deleteButton } = this.children;
-    const hasChats = Array.isArray(chats) && chats.length > 0;
-    this.setProps({ isVisible: hasChats });
-    if (!hasChats) {
-      deleteButton.setProps({ disabled: true });
-      this.setProps({
-        title: this.props.emptyTitle ?? 'Выберите чат',
-      });
+    const { activeChat } = this.props;
+    const { deleteButton } = this.children as { deleteButton?: Button };
+    if (!deleteButton) {
       return;
     }
 
     if (!activeChat) {
-      deleteButton.setProps({ disabled: true });
+      deleteButton.disable();
       this.setProps({
-        title: this.props.emptyTitle ?? 'Выберите чат',
+        title: 'Выберите чат',
       });
       return;
     }
 
-    deleteButton.setProps({ disabled: false });
+    deleteButton.enable();
 
     this.setProps({
       title: activeChat.title,
     });
+  };
+
+  private _setHandlers(): void {
+    const { deleteButton } = this.children as { deleteButton?: Button };
+    if (!deleteButton) {
+      return;
+    }
+    deleteButton.setProps({
+      events: {
+        click: this._handleDeleteClick,
+      },
+    });
+  }
+
+  private _handleDeleteClick = () => {
+    const { activeChat } = this.props;
+    if (!activeChat) {
+      return;
+    }
+    const { deleteButton } = this.children as { deleteButton?: Button };
+    if (!deleteButton) {
+      return;
+    }
+    deleteButton.disable();
+    this._chatsController
+      .deleteChat({ id: activeChat.id })
+      .catch(console.log)
+      .finally(() => {
+        deleteButton.enable();
+      });
   };
 }

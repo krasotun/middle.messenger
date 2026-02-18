@@ -1,4 +1,5 @@
 import { Block, BlockProps } from '../../../core';
+import { Button } from '../button';
 import { Input } from '../input';
 
 export abstract class Form<T> extends Block {
@@ -58,9 +59,16 @@ export abstract class Form<T> extends Block {
   }
 
   protected _toggleFormSubmitButtonDisabled(disabled: boolean) {
-    const { submitButton } = this.children;
+    const { submitButton } = this.children as { submitButton?: Button };
+    if (!submitButton) {
+      return;
+    }
 
-    submitButton.setProps({ disabled });
+    if (disabled) {
+      submitButton.disable();
+      return;
+    }
+    submitButton.enable();
   }
 
   protected _resetAllInputs() {

@@ -1,4 +1,5 @@
 import { Messenger } from '../../components/messenger';
+import { UsersController } from '../../controllers';
 import { Block, type BlockProps, connect } from '../../core';
 import type { AppState } from '../../core/Store.ts';
 
@@ -13,12 +14,14 @@ export type MainPageProps = BlockProps & {
 };
 
 const mapStateToProps = (state: AppState) => {
-  const { activeChat } = state;
-  return { activeChat };
+  const { activeChat, chats } = state;
+  return { activeChat, chats };
 };
 const ConnectedMessenger = connect(Messenger, mapStateToProps);
 
 export class MainPage extends Block<MainPageProps> {
+  private readonly _usersController = new UsersController();
+
   constructor() {
     super({
       children: {
@@ -29,6 +32,10 @@ export class MainPage extends Block<MainPageProps> {
         }),
       },
     } as MainPageProps);
+  }
+
+  protected componentDidMount(): void {
+    this._usersController.loadUserData().catch(console.log);
   }
 
   render(): DocumentFragment {

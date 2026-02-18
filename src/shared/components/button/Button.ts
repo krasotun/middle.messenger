@@ -21,6 +21,14 @@ export class Button extends Block<ButtonProps> {
     });
   }
 
+  disable(): void {
+    this.setProps({ disabled: true });
+  }
+
+  enable(): void {
+    this.setProps({ disabled: false });
+  }
+
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
