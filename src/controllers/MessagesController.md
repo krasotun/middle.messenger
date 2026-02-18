@@ -13,7 +13,7 @@
 - `Store` — хранит сообщения и маркеры обновления.
 
 ## Жизненный цикл
-1. `connect({ userId, chatId, token })`
+1. `connectToChat({ userId, chatId, token })`
    - закрывает предыдущий сокет;
    - открывает новый `WebSocket`;
    - навешивает события (`open`, `message`, `close`, `error`).
@@ -60,7 +60,7 @@ messagesController.sendMessage(content);
 
 ## Подключение к чату
 Подключение инициируется при смене активного чата:
-- `ChatsController.setActiveChat` → `_connectToChat` → `MessagesController.connect`.
+- `ChatsController.setActiveChat` → `_connectToChat` → `MessagesController.connectToChat`.
 
 ## Ping
 Отправляется каждые 10 секунд:

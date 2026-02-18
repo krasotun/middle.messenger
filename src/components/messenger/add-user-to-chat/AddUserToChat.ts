@@ -1,5 +1,6 @@
 import { ChatsController } from '../../../controllers';
 import { type BlockProps } from '../../../core';
+import { AddUserToChatResult } from '../../../model/Chat.ts';
 import { Button } from '../../../shared/components/button';
 import { Form } from '../../../shared/components/form';
 import { Input } from '../../../shared/components/input';
@@ -68,14 +69,13 @@ export class AddUserToChat extends Form<AddUserToChatFormValue> {
     this._chatsController
       .addUserToChat(value)
       .then((result) => {
-        console.log(result);
-        if (result === 'not_found') {
+        if (result === AddUserToChatResult.NotFound) {
           const { userLoginInput } = this.children as Required<AddUserToChatFormProps>['children'];
           userLoginInput.setErrorMessage('Пользователь не найден');
           return;
         }
 
-        if (result === 'ok') {
+        if (result === AddUserToChatResult.Ok) {
           this._resetAllInputs();
           this._toggleFormDisabled(true);
         }

@@ -19,3 +19,9 @@ export type ChatUsersRequest = {
   users: number[];
   chatId: number;
 };
+
+export enum AddUserToChatResult {
+  Ok = 'ok',
+  NotFound = 'not_found',
+  NoActiveChat = 'no_active_chat',
+}

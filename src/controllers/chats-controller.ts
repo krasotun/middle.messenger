@@ -2,12 +2,10 @@ import { ChatsApi, UsersApi } from '../api';
 import { AddUserToChatFormValue } from '../components/messenger/add-user-to-chat/AddUserToChat.ts';
 import { CreateChatFormValue } from '../components/messenger/create-chat-form/CreateChatForm.ts';
 import { Store } from '../core';
-import { ActiveChat, ChatId, CreateChatRequest } from '../model/Chat.ts';
-import { User, UserSearchRequest } from '../model/User.ts';
+import { ActiveChat, AddUserToChatResult, ChatId, CreateChatRequest } from '../model/Chat.ts';
+import { UserSearchRequest } from '../model/User.ts';
 
 import { MessagesController } from './messages-controller.ts';
-
-export type AddUserToChatResult = 'ok' | 'not_found' | 'no_active_chat';
 
 export class ChatsController {
   private readonly _chatsApi = new ChatsApi();
@@ -81,17 +79,17 @@ export class ChatsController {
       const payload = this._prepareUserSearchPayload(value);
       const users = await this._usersApi.searchUser(payload);
       if (!Array.isArray(users) || users.length === 0) {
-        return 'not_found';
+        return AddUserToChatResult.NotFound;
       }
 
       const { activeChat } = this._store.getState();
       if (!activeChat) {
-        return 'no_active_chat';
+        return AddUserToChatResult.NoActiveChat;
       }
 
       const userIds = Array.from(new Set(users.map((user) => user.id)));
       if (userIds.length === 0) {
-        return 'not_found';
+        return AddUserToChatResult.NotFound;
       }
 
       await this._chatsApi.addUsersToChat({
@@ -99,28 +97,30 @@ export class ChatsController {
         chatId: activeChat.id,
       });
 
-      return 'ok';
+      return AddUserToChatResult.Ok;
     } catch (error: unknown) {
       console.log(error);
     }
-    return 'not_found';
+    return AddUserToChatResult.NotFound;
   }
 
   private async _connectToChat(chatId: number) {
-    const { userProfile } = this._store.getState() as { userProfile?: User };
+    const { userProfile } = this._store.getState();
+
     if (!userProfile) {
       return;
     }
 
-    const tokenResponse = (await this._chatsApi.getChatToken(chatId)) as { token?: string };
-    if (!tokenResponse.token) {
+    const { token } = (await this._chatsApi.getChatToken(chatId)) as { token?: string };
+
+    if (!token) {
       return;
     }
 
-    this._messagesController.connect({
+    this._messagesController.connectToChat({
       userId: userProfile.id,
       chatId,
-      token: tokenResponse.token,
+      token,
     });
   }
 

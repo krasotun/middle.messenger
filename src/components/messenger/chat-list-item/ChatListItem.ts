@@ -1,5 +1,6 @@
 import { ChatsController } from '../../../controllers';
 import { Block, type BlockProps } from '../../../core';
+import { Nullable } from '../../../types/nullable.type.ts';
 
 import template from './ChatListItem.hbs';
 import './ChatListItem.css';
@@ -7,7 +8,7 @@ import './ChatListItem.css';
 export type ChatListItemProps = BlockProps & {
   id: number;
   title: string;
-  lastMessage?: string | null;
+  lastMessage?: Nullable<string>;
   time?: string;
   unreadCount?: number;
   isActive?: boolean;
@@ -20,7 +21,6 @@ export class ChatListItem extends Block<ChatListItemProps> {
     super({
       ...props,
       events: {
-        ...(props.events ?? {}),
         click: (event: Event) => {
           this._handleClick(event);
         },
