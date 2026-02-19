@@ -1,22 +1,6 @@
 import { MessagesApi } from '../api';
 import { Store } from '../core';
-
-export type Message = {
-  id?: number;
-  user_id?: number;
-  chat_id?: number;
-  time?: string;
-  type?: string;
-  content?: string;
-};
-
-type MessagesState = Record<number, Message[]>;
-
-type ConnectParams = {
-  userId: number;
-  chatId: number;
-  token: string;
-};
+import { Message, MessagesState, MessengerConnectParams } from '../model/Message.ts';
 
 const PING_INTERVAL_MS = 10000;
 
@@ -38,7 +22,7 @@ export class MessagesController {
     MessagesController._instance = this;
   }
 
-  connectToChat({ userId, chatId, token }: ConnectParams): void {
+  connectToChat({ userId, chatId, token }: MessengerConnectParams): void {
     this.disconnect();
     const socket = this._messagesApi.initConnection({ userId, chatId, token });
     this._socket = socket;
@@ -49,7 +33,7 @@ export class MessagesController {
   disconnect(): void {
     this._stopPing();
     this._unbindSocketListeners();
-    this._messagesApi.close();
+    this._messagesApi.closeConnection();
     this._socket = null;
   }
 

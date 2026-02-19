@@ -16,7 +16,7 @@
 1. `connectToChat({ userId, chatId, token })`
    - закрывает предыдущий сокет;
    - открывает новый `WebSocket`;
-   - навешивает события (`open`, `message`, `close`, `error`).
+   - навешивает события (`open`, `message`, `closeConnection`, `error`).
 2. `disconnect()`
    - останавливает ping;
    - закрывает сокет.
@@ -28,7 +28,7 @@
 - `message`
   - если массив — это история сообщений;
   - если объект с `type: 'message'` — добавляется в список.
-- `close`
+- `closeConnection`
   - остановка `ping`.
 - `error`
   - логирование.

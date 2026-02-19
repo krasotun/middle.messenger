@@ -1,5 +1,5 @@
-import { Message } from '../controllers/messages-controller.ts';
 import { ActiveChat, Chat } from '../model/Chat.ts';
+import { Message } from '../model/Message.ts';
 import { User } from '../model/User.ts';
 import { Nullable } from '../types/nullable.type.ts';
 

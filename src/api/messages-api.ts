@@ -22,7 +22,7 @@ export class MessagesApi extends BaseApi {
     return socket;
   }
 
-  close(): void {
+  closeConnection(): void {
     this._socket?.close();
     this._socket = null;
   }
