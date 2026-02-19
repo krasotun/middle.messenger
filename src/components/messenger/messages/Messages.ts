@@ -57,40 +57,15 @@ export class Messages extends Block<MessagesProps> {
 
     const list = messages[activeChat.id] ?? [];
     const userId = userProfile?.id;
-    const items = list
-      .map((message, index) => {
-        const messageUserId = message.user_id === undefined ? null : message.user_id;
-        const currentUserId = userId === undefined ? null : userId;
-        const rawTime = message.time ?? '';
-        return {
-          content: message.content ?? '',
-          time: rawTime ? this._formatTime(rawTime) : '',
-          rawTime,
-          isOutgoing: currentUserId !== null && messageUserId === currentUserId,
-          index,
-        };
-      })
-      .sort((a, b) => {
-        const timeA = Date.parse(a.rawTime);
-        const timeB = Date.parse(b.rawTime);
-        const isValidA = Number.isFinite(timeA);
-        const isValidB = Number.isFinite(timeB);
-
-        if (isValidA && isValidB) {
-          return timeA - timeB;
-        }
-
-        if (isValidA) {
-          return -1;
-        }
-
-        if (isValidB) {
-          return 1;
-        }
-
-        return a.index - b.index;
-      })
-      .map(({ content, time, isOutgoing }) => ({ content, time, isOutgoing }));
+    const items = list.map((message) => {
+      const messageUserId = message.user_id === undefined ? null : message.user_id;
+      const currentUserId = userId === undefined ? null : userId;
+      return {
+        content: message.content ?? '',
+        time: message.time ? this._formatTime(message.time) : '',
+        isOutgoing: currentUserId !== null && messageUserId === currentUserId,
+      };
+    });
 
     this.setProps({ items });
   };

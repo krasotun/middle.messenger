@@ -100,7 +100,9 @@ export class ChatHeader extends Block<ChatHeaderProps> {
     if (!deleteButton) {
       return;
     }
+
     deleteButton.disable();
+
     this._chatsController
       .deleteChat({ id: activeChat.id })
       .catch(console.log)

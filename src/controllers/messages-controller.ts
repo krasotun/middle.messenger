@@ -138,7 +138,8 @@ export class MessagesController {
     }
 
     if (Array.isArray(data)) {
-      this._setMessages(chatId, data as Message[]);
+      const list = data as Message[];
+      this._setMessages(chatId, [...list].reverse());
       return;
     }
 
