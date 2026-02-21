@@ -4,7 +4,7 @@ import { BaseApi } from './base-api.ts';
 
 export class ChatsApi extends BaseApi {
   getChats(): Promise<Chat[]> {
-    return this.get('/chats') as Promise<Chat[]>;
+    return this.get<Chat[]>('/chats');
   }
 
   createChat(data: CreateChatRequest) {
@@ -17,6 +17,10 @@ export class ChatsApi extends BaseApi {
 
   addUsersToChat(data: ChatUsersRequest) {
     return this.put('/chats/users', { data });
+  }
+
+  removeUsersFromChat(data: ChatUsersRequest) {
+    return this.delete('/chats/users', { data });
   }
 
   getChatToken(id: number) {

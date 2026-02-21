@@ -9,7 +9,7 @@ import { BaseApi } from './base-api.ts';
 
 export class UsersApi extends BaseApi {
   changeProfile(data: UserChangeProfileRequest): Promise<User> {
-    return this.put('/user/profile', { data }) as Promise<User>;
+    return this.put<User>('/user/profile', { data });
   }
 
   changePassword(data: UserChangePasswordRequest) {
@@ -17,10 +17,10 @@ export class UsersApi extends BaseApi {
   }
 
   changeAvatar(data: FormData): Promise<User> {
-    return this.put('/user/profile/avatar', { data }) as Promise<User>;
+    return this.put<User>('/user/profile/avatar', { data });
   }
 
-  searchUser(data: UserSearchRequest) {
-    return this.post('/user/search', { data }) as Promise<User[]>;
+  searchUsers(data: UserSearchRequest) {
+    return this.post<User[]>('/user/search', { data });
   }
 }

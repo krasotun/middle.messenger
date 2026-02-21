@@ -4,29 +4,30 @@ export abstract class BaseApi {
   protected http = new HTTPTransport();
   protected baseUrl: string = 'https://ya-praktikum.tech/api/v2';
 
-  protected async post(url: string, options: RequestOptions) {
+  protected async post<T>(url: string, options: RequestOptions): Promise<T> {
     const xhr = await this.http.post(this.baseUrl + url, options);
-    return this._handleResponse(xhr);
+    return this._handleResponse(xhr) as T;
   }
 
-  protected async get(url: string, options?: RequestOptions) {
+  protected async get<T>(url: string, options?: RequestOptions): Promise<T> {
     const xhr = await this.http.get(this.baseUrl + url, options);
-    return this._handleResponse(xhr);
+    return this._handleResponse(xhr) as T;
   }
 
-  protected async put(url: string, options?: RequestOptions) {
+  protected async put<T>(url: string, options?: RequestOptions): Promise<T> {
     const xhr = await this.http.put(this.baseUrl + url, options);
-    return this._handleResponse(xhr);
+    return this._handleResponse(xhr) as T;
   }
 
-  protected async delete(url: string, options?: RequestOptions) {
+  protected async delete<T>(url: string, options?: RequestOptions): Promise<T> {
     const xhr = await this.http.delete(this.baseUrl + url, options);
-    return this._handleResponse(xhr);
+    return this._handleResponse(xhr) as T;
   }
 
   protected _handleResponse(xhr: XMLHttpRequest): unknown {
     const contentType = xhr.getResponseHeader('Content-Type');
     const isJson = contentType?.includes('application/json') ?? false;
+
     if (!isJson) {
       return xhr.response;
     }

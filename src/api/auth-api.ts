@@ -11,7 +11,7 @@ export class AuthApi extends BaseApi {
   }
 
   getUser() {
-    return this.get('/auth/user') as Promise<User>;
+    return this.get<User>('/auth/user');
   }
 
   logout() {

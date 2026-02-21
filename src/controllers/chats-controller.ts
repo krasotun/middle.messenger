@@ -1,6 +1,7 @@
 import { ChatsApi, UsersApi } from '../api';
-import { AddUserToChatFormValue } from '../components/messenger/add-user-to-chat/AddUserToChat.ts';
+import { AddUserToChatFormValue } from '../components/messenger/add-user-to-chat/AddUserToChatForm.ts';
 import { CreateChatFormValue } from '../components/messenger/create-chat-form/CreateChatForm.ts';
+import { RemoveUserFromChatFormValue } from '../components/messenger/remove-user-from-chat/RemoveUserFromChatForm.ts';
 import { Store } from '../core';
 import { ActiveChat, AddUserToChatResult, ChatId, CreateChatRequest } from '../model/Chat.ts';
 import { UserSearchRequest } from '../model/User.ts';
@@ -75,28 +76,36 @@ export class ChatsController {
   }
 
   async addUserToChat(value: AddUserToChatFormValue): Promise<AddUserToChatResult> {
+    const resolved = await this._resolveUsersForChat(value);
+    if ('result' in resolved) {
+      return resolved.result;
+    }
+
+    const { userIds, chatId } = resolved;
     try {
-      const payload = this._prepareUserSearchPayload(value);
-      const users = await this._usersApi.searchUser(payload);
-      if (!Array.isArray(users) || users.length === 0) {
-        return AddUserToChatResult.NotFound;
-      }
-
-      const { activeChat } = this._store.getState();
-      if (!activeChat) {
-        return AddUserToChatResult.NoActiveChat;
-      }
-
-      const userIds = Array.from(new Set(users.map((user) => user.id)));
-      if (userIds.length === 0) {
-        return AddUserToChatResult.NotFound;
-      }
-
       await this._chatsApi.addUsersToChat({
         users: userIds,
-        chatId: activeChat.id,
+        chatId,
       });
+      return AddUserToChatResult.Ok;
+    } catch (error: unknown) {
+      console.log(error);
+    }
+    return AddUserToChatResult.NotFound;
+  }
 
+  async removeUserFromChat(value: RemoveUserFromChatFormValue): Promise<AddUserToChatResult> {
+    const resolved = await this._resolveUsersForChat(value);
+    if ('result' in resolved) {
+      return resolved.result;
+    }
+
+    const { userIds, chatId } = resolved;
+    try {
+      await this._chatsApi.removeUsersFromChat({
+        users: userIds,
+        chatId,
+      });
       return AddUserToChatResult.Ok;
     } catch (error: unknown) {
       console.log(error);
@@ -130,9 +139,41 @@ export class ChatsController {
     };
   }
 
-  private _prepareUserSearchPayload(value: AddUserToChatFormValue): UserSearchRequest {
+  private _prepareUserSearchPayload(
+    value: AddUserToChatFormValue | RemoveUserFromChatFormValue,
+  ): UserSearchRequest {
     return {
       login: value.userLogin,
     };
+  }
+
+  private async _resolveUsersForChat(
+    value: AddUserToChatFormValue | RemoveUserFromChatFormValue,
+  ): Promise<
+    | { userIds: number[]; chatId: number }
+    | { result: AddUserToChatResult.NotFound | AddUserToChatResult.NoActiveChat }
+  > {
+    try {
+      const payload = this._prepareUserSearchPayload(value);
+      const users = await this._usersApi.searchUsers(payload);
+      if (!Array.isArray(users) || users.length === 0) {
+        return { result: AddUserToChatResult.NotFound };
+      }
+
+      const { activeChat } = this._store.getState();
+      if (!activeChat) {
+        return { result: AddUserToChatResult.NoActiveChat };
+      }
+
+      const userIds = Array.from(new Set(users.map((user) => user.id)));
+      if (userIds.length === 0) {
+        return { result: AddUserToChatResult.NotFound };
+      }
+
+      return { userIds, chatId: activeChat.id };
+    } catch (error: unknown) {
+      console.log(error);
+      return { result: AddUserToChatResult.NotFound };
+    }
   }
 }

@@ -13,6 +13,7 @@ import { ChatList } from './chat-list';
 import { CreateChatForm } from './create-chat-form';
 import { Messages } from './messages';
 import template from './Messenger.hbs';
+import { RemoveUserFromChatForm } from './remove-user-from-chat';
 import { MessengerSendMessageForm } from './send-message-form';
 
 import './Messenger.css';
@@ -21,7 +22,8 @@ export type MessengerProps = BlockProps & {
   activeChat?: Nullable<ActiveChat>;
   children?: {
     addChatForm?: CreateChatForm;
-    addUserToChat?: AddUserToChat;
+    addUserToChatForm?: AddUserToChat;
+    removeUserFromChatForm?: RemoveUserFromChatForm;
     chatHeader?: ChatHeader;
     chatList?: ChatList;
     messages?: Messages;
@@ -67,7 +69,12 @@ export class Messenger extends Block<MessengerProps> {
           withInternalID: true,
         },
       }),
-      addUserToChat: new AddUserToChat({
+      addUserToChatForm: new AddUserToChat({
+        settings: {
+          withInternalID: true,
+        },
+      }),
+      removeUserFromChatForm: new RemoveUserFromChatForm({
         settings: {
           withInternalID: true,
         },

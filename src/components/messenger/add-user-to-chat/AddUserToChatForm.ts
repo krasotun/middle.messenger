@@ -5,9 +5,9 @@ import { Button } from '../../../shared/components/button';
 import { Form } from '../../../shared/components/form';
 import { Input } from '../../../shared/components/input';
 
-import template from './AddUserToChat.hbs';
+import template from './AddUserToChatForm.hbs';
 
-import './AddUserToChat.css';
+import './AddUserToChatForm.css';
 
 export type AddUserToChatFormProps = BlockProps & {
   children?: {
