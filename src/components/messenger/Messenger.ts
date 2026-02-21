@@ -138,7 +138,9 @@ export class Messenger extends Block<MessengerProps> {
         color: 'danger',
         events: {
           click: () => {
-            this._usersController.logout();
+            this._handleLogoutClick()
+              .then(() => {})
+              .catch(console.log);
           },
         },
         settings: {
@@ -190,5 +192,9 @@ export class Messenger extends Block<MessengerProps> {
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
+  }
+
+  private _handleLogoutClick(): Promise<void> {
+    return this._usersController.logout();
   }
 }

@@ -35,7 +35,7 @@ export class MainPage extends Block<MainPageProps> {
   }
 
   protected componentDidMount(): void {
-    this._usersController.loadUserData().catch(console.log);
+    void this._usersController.loadUserData();
   }
 
   render(): DocumentFragment {

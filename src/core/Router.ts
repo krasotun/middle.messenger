@@ -1,7 +1,7 @@
 import { Nullable } from '../types/nullable.type.ts';
 
 import { BlockProps } from './Block.ts';
-import { BlockConstructor, Route } from './Route.ts';
+import { BlockConstructor, Route, RouteGuard } from './Route.ts';
 
 export enum Routes {
   SignInPage = '/',
@@ -27,8 +27,8 @@ export class Router {
     Router._instance = this;
   }
 
-  use(pathName: Routes, block: BlockConstructor, props: BlockProps) {
-    const route = new Route(pathName, block, props);
+  use(pathName: Routes, block: BlockConstructor, props: BlockProps, guard?: RouteGuard) {
+    const route = new Route(pathName, block, props, guard);
 
     this._routes.push(route);
 
@@ -49,6 +49,11 @@ export class Router {
     this._onRoute(pathName);
   }
 
+  replace(pathName: string) {
+    this._history.replaceState({}, '', pathName);
+    this._onRoute(pathName);
+  }
+
   back() {
     this._history.back();
   }
@@ -60,6 +65,12 @@ export class Router {
   private _onRoute(pathName: string) {
     const route = this._getRoute(pathName);
     if (!route) {
+      return;
+    }
+
+    const guardedPath = route.guard(pathName);
+    if (guardedPath && guardedPath !== pathName) {
+      this.replace(guardedPath);
       return;
     }
 

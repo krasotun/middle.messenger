@@ -4,6 +4,7 @@ import { Nullable } from '../types/nullable.type.ts';
 import { Block, BlockProps } from './Block.ts';
 
 export type BlockConstructor = new (props: BlockProps) => Block;
+export type RouteGuard = (pathName: string) => string | null;
 
 export class Route {
   private _block: Nullable<Block> = null;
@@ -12,6 +13,7 @@ export class Route {
     private _pathName: string,
     private _viewClass: BlockConstructor,
     private _props?: BlockProps,
+    private _guard?: RouteGuard,
   ) {}
 
   render(): void {
@@ -33,5 +35,9 @@ export class Route {
 
   match(pathname: string) {
     return isEqual(pathname, this._pathName);
+  }
+
+  guard(pathname: string) {
+    return this._guard ? this._guard(pathname) : null;
   }
 }

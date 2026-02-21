@@ -75,6 +75,10 @@ export class ChatsController {
     this._connectToChat(activeChat.id).catch(console.log);
   }
 
+  disconnect(): void {
+    this._messagesController.disconnect();
+  }
+
   async addUserToChat(value: AddUserToChatFormValue): Promise<AddUserToChatResult> {
     const resolved = await this._resolveUsersForChat(value);
     if ('result' in resolved) {

@@ -25,6 +25,10 @@ export abstract class BaseApi {
   }
 
   protected _handleResponse(xhr: XMLHttpRequest): unknown {
+    if (xhr.status >= 400) {
+      throw new Error(`HTTP ${String(xhr.status)}`);
+    }
+
     const contentType = xhr.getResponseHeader('Content-Type');
     const isJson = contentType?.includes('application/json') ?? false;
 

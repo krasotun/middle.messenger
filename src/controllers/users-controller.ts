@@ -39,15 +39,16 @@ export class UsersController {
       await this._authApi.signIn(payload);
       console.log('Авторизация успешна');
 
-      this._router.go(Routes.MainPage);
-
-      await this.loadUserData();
+      const loaded = await this.loadUserData();
+      if (loaded) {
+        this._router.go(Routes.MainPage);
+      }
     } catch (error: unknown) {
       console.log(error);
     }
   }
 
-  async loadUserData() {
+  async loadUserData(): Promise<boolean> {
     try {
       const userProfile = await this._authApi.getUser();
       this._store.set('userProfile', userProfile);
@@ -55,19 +56,24 @@ export class UsersController {
       console.log(this._store.getState());
 
       this._chatsController.ensureActiveChatConnection();
+      return true;
     } catch (error: unknown) {
       console.log(error);
+      this._store.resetState();
+      return false;
     }
   }
 
-  logout() {
-    this._authApi
-      .logout()
-      .then(() => {
-        this._store.resetState();
-        this._router.go(Routes.SignInPage);
-      })
-      .catch(console.log);
+  async logout() {
+    try {
+      await this._authApi.logout();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this._chatsController.disconnect();
+      this._store.resetState();
+      this._router.go(Routes.SignInPage);
+    }
   }
 
   async changeProfile(value: EditProfileFormValue) {
