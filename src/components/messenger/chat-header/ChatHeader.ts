@@ -18,7 +18,7 @@ export type ChatHeaderProps = BlockProps & {
 export class ChatHeader extends Block<ChatHeaderProps> {
   private readonly _chatsController = new ChatsController();
 
-  constructor(props: BlockProps) {
+  constructor(props: ChatHeaderProps) {
     const defaultChildren = {
       deleteButton: new Button({
         title: 'Удалить чат',
@@ -32,10 +32,10 @@ export class ChatHeader extends Block<ChatHeaderProps> {
     };
 
     super({
-      ...(props as ChatHeaderProps),
+      ...props,
       children: {
         ...defaultChildren,
-        ...((props as ChatHeaderProps).children ?? {}),
+        ...(props.children ?? {}),
       },
     });
 

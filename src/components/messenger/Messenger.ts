@@ -52,10 +52,7 @@ const mapStateToMessagesProps = (state: AppState) => {
 
 const connectedChatList = connect(ChatList, mapStateToChatListProps);
 
-const connectedChatHeader = connect(
-  ChatHeader as unknown as new (props: BlockProps) => Block,
-  mapStateToChatHeaderProps,
-);
+const connectedChatHeader = connect(ChatHeader, mapStateToChatHeaderProps);
 
 const connectedMessages = connect(Messages, mapStateToMessagesProps);
 
