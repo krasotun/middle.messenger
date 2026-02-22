@@ -1,5 +1,7 @@
-import { Block, type BlockProps } from '../../core';
+import { UsersController } from '../../controllers';
+import { type BlockProps } from '../../core';
 import { Button } from '../../shared/components/button';
+import { Form } from '../../shared/components/form';
 import { Input } from '../../shared/components/input';
 import { Link } from '../../shared/components/link';
 
@@ -8,7 +10,7 @@ import template from './SignInForm.hbs';
 import './SignInForm.css';
 
 export type SignInFormProps = BlockProps & {
-  children: {
+  children?: {
     loginInput: Input;
     passwordInput: Input;
     submitButton: Button;
@@ -16,50 +18,32 @@ export type SignInFormProps = BlockProps & {
   };
 };
 
-export class SignInForm extends Block<SignInFormProps> {
-  constructor(props: SignInFormProps) {
-    super({
-      ...props,
-      events: {
-        ...(props.events ?? {}),
-      },
-    });
+export type SignInFormValue = {
+  login: string;
+  password: string;
+};
 
-    this._setHandlers();
-  }
+export class SignInForm extends Form<SignInFormValue> {
+  private readonly _usersController = new UsersController();
 
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 
-  private _setHandlers(): void {
-    this.setProps({
-      events: {
-        ...(this.props.events ?? {}),
-        submit: this._handleSubmit,
-      },
-    });
-  }
-
-  private _handleSubmit = (event: Event) => {
+  override _handleSubmit(event: Event) {
     event.preventDefault();
-    const inputs = Object.values(this.children).filter((child) => child instanceof Input);
-    let isValid = true;
-    for (const input of inputs) {
-      if (!input.validate()) {
-        isValid = false;
-      }
-    }
-
-    if (!isValid) {
-      console.log('Данные не валидны');
+    if (!this._validateForm()) {
       return;
     }
 
-    const values = Object.fromEntries(inputs.map((input) => [input.name, input.value]));
+    this._toggleFormDisabled(true);
+    const value = this.rawValue;
 
-    console.log({
-      ...values,
-    });
-  };
+    this._usersController
+      .signInUser(value)
+      .catch(console.log)
+      .finally(() => {
+        this._toggleFormDisabled(false);
+      });
+  }
 }

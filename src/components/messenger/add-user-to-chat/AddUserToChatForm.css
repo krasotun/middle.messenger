@@ -1,0 +1,10 @@
+.add-user-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+
+    & .button {
+        width: 100%;
+    }
+
+}

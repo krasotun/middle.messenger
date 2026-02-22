@@ -1,0 +1,19 @@
+<li class="messenger__chat-item{{#if isActive}} messenger__chat-item_active{{/if}}">
+    <div class="messenger__chat-avatar" aria-hidden="true"></div>
+    <div class="messenger__chat-content">
+        <div class="messenger__chat-row">
+            <div class="messenger__chat-name">{{ title }}</div>
+            {{#if time}}<div class="messenger__chat-time">{{ time }}</div>{{/if}}
+        </div>
+        <div class="messenger__chat-row messenger__chat-row_meta">
+            <div class="messenger__chat-preview">
+                {{#if lastMessage}}
+                    {{ lastMessage }}
+                {{else}}
+                    В чате нет сообщений
+                {{/if}}
+            </div>
+            {{#if unreadCount}}<div class="messenger__chat-unread">{{ unreadCount }}</div>{{/if}}
+        </div>
+    </div>
+</li>

@@ -1,9 +1,7 @@
 import { Messenger } from '../../components/messenger';
-import { MessengerSendMessageForm } from '../../components/messenger/send-message-form';
-import { Block, type BlockProps } from '../../core';
-import { Button } from '../../shared/components/button';
-import { Input } from '../../shared/components/input';
-import { requiredValidator } from '../../shared/validators';
+import { UsersController } from '../../controllers';
+import { Block, type BlockProps, connect } from '../../core';
+import type { AppState } from '../../core/Store.ts';
 
 import template from './main-page.hbs';
 
@@ -15,46 +13,32 @@ export type MainPageProps = BlockProps & {
   };
 };
 
+const mapStateToProps = (state: AppState) => {
+  const { activeChat, chats } = state;
+  return { activeChat, chats };
+};
+const ConnectedMessenger = connect(Messenger, mapStateToProps);
+
 export class MainPage extends Block<MainPageProps> {
+  private readonly _usersController = new UsersController();
+
+  constructor() {
+    super({
+      children: {
+        messenger: new ConnectedMessenger({
+          settings: {
+            withInternalID: true,
+          },
+        }),
+      },
+    } as MainPageProps);
+  }
+
+  protected componentDidMount(): void {
+    void this._usersController.loadUserData();
+  }
+
   render(): DocumentFragment {
     return this.renderTemplate(template);
   }
 }
-
-export const createMainPage = () =>
-  new MainPage({
-    children: {
-      messenger: new Messenger({
-        children: {
-          sendMessageForm: new MessengerSendMessageForm({
-            children: {
-              messageInput: new Input({
-                name: 'message',
-                label: 'Сообщение',
-                type: 'text',
-                placeholder: 'Сообщение',
-                validators: [requiredValidator()],
-                settings: {
-                  withInternalID: true,
-                },
-              }),
-              sendButton: new Button({
-                title: 'Отправить',
-                type: 'submit',
-                color: 'primary',
-                settings: {
-                  withInternalID: true,
-                },
-              }),
-            },
-            settings: {
-              withInternalID: true,
-            },
-          }),
-        },
-        settings: {
-          withInternalID: true,
-        },
-      }),
-    },
-  });

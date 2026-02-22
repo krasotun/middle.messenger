@@ -44,3 +44,11 @@
 - ESLint — линтинг JS/TS
 - Stylelint — линтинг CSS
 - Prettier — форматирование
+
+
+пользователиp@ssw0rdQAZXSW@@
+
+krasotun
+alcozavr
+zavroalk
+p@ssw0rdQAZXSW@@

@@ -1,0 +1,8 @@
+<div class="messenger__chat-body">
+    {{#each items}}
+        <div class="messenger__message{{#if isOutgoing}} messenger__message_outgoing{{else}} messenger__message_incoming{{/if}}">
+            <div class="messenger__message-text">{{ content }}</div>
+            <div class="messenger__message-time">{{ time }}</div>
+        </div>
+    {{/each}}
+</div>

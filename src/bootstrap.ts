@@ -1,47 +1,38 @@
-import navigationMenu from './components/temp-nav';
-import { createNotFoundPage } from './pages/404-page';
-import { createServerErrorPage } from './pages/500-page';
-import { createEditProfilePage } from './pages/edit-profile-page';
-import { createMainPage } from './pages/main-page';
-import { createSignInPage } from './pages/sign-in-page';
-import { createSignUpPage } from './pages/sign-up-page';
+import { UsersController } from './controllers';
+import { Router, Routes, Store } from './core/';
+import { createRequireAuthGuard } from './core/auth-guard.ts';
+import { ChangeAvatarPage } from './pages/change-avatar-page';
+import { ChangePasswordPage } from './pages/change-password-page';
+import { EditProfilePage } from './pages/edit-profile-page';
+import { MainPage } from './pages/main-page';
+import { SignInPage } from './pages/sign-in-page';
+import { SignUpPage } from './pages/sign-up-page';
 
-export default () => {
-  const appContainer = document.getElementById('app');
+export default async () => {
+  console.log('boot');
 
-  if (appContainer) {
-    const path = window.location.pathname;
+  const store = new Store();
+  const usersController = new UsersController();
 
-    appContainer.innerHTML = '';
-    appContainer.appendChild(navigationMenu.element);
+  await usersController.loadUserData();
 
-    switch (path) {
-      case '/':
-      case '/index.html':
-      case '/sign-in':
-        appContainer.appendChild(createSignInPage().element);
-        break;
-      case '/sign-up':
-      case '/sign-up.html':
-        appContainer.appendChild(createSignUpPage().element);
-        break;
-      case '/edit-profile.html':
-        appContainer.appendChild(createEditProfilePage().element);
-        break;
-      case '/main.html':
-        appContainer.appendChild(createMainPage().element);
-        break;
-      case '/500.html':
-        appContainer.appendChild(createServerErrorPage().element);
-        break;
-      case '/404.html':
-        appContainer.appendChild(createNotFoundPage().element);
-        break;
-      default:
-        appContainer.appendChild(createNotFoundPage().element);
-        break;
-    }
-  } else {
-    throw new Error('Container with id="app" not found! Please, create it');
+  const router = new Router();
+  const requireAuth = createRequireAuthGuard(store);
+
+  const { pathname } = window.location as Location & { pathname: Routes };
+  if (
+    store.getState().userProfile &&
+    (pathname === Routes.SignInPage || pathname === Routes.SignUpPage)
+  ) {
+    window.history.replaceState({}, '', Routes.MainPage);
   }
+
+  router.use(Routes.SignInPage, SignInPage, {});
+  router.use(Routes.SignUpPage, SignUpPage, {});
+  router.use(Routes.MainPage, MainPage, {}, requireAuth);
+  router.use(Routes.EditProfilePage, EditProfilePage, {}, requireAuth);
+  router.use(Routes.ChangePasswordPage, ChangePasswordPage, {}, requireAuth);
+  router.use(Routes.ChangeAvatarPage, ChangeAvatarPage, {}, requireAuth);
+
+  router.start();
 };

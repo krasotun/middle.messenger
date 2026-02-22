@@ -1,1 +1,1 @@
-export { MainPage, createMainPage } from './MainPage.ts';
+export { MainPage } from './MainPage.ts';

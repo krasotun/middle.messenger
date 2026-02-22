@@ -20,14 +20,16 @@ enum ValidatorMessage {
 
 export type InputProps = BlockProps & {
   name: string;
-  label: string;
+  label?: string;
   type: 'text' | 'email' | 'password' | 'tel' | 'number' | 'file';
   validators?: ValueValidator[];
-  value?: string;
+  value?: string | FileList | null;
   placeholder?: string;
   disabled?: boolean;
   isValid?: boolean;
   errorMessage?: string;
+  isFile?: boolean;
+  onChange?: (value: string | FileList | null) => void;
   events?: {
     input?: (event: Event) => void;
     blur?: (event: Event) => void;
@@ -36,12 +38,15 @@ export type InputProps = BlockProps & {
 };
 
 export class Input extends Block<InputProps> {
+  private _isFocused = false;
   constructor(props: InputProps) {
     super({
       ...props,
       value: props.value ?? '',
+      isFile: props.type === 'file',
       isValid: props.isValid ?? true,
       errorMessage: props.errorMessage ?? '',
+      disabled: props.disabled ?? false,
       events: {
         ...(props.events ?? {}),
       },
@@ -54,7 +59,7 @@ export class Input extends Block<InputProps> {
     return this.props.name;
   }
 
-  get value(): string | undefined {
+  get value(): string | FileList | null | undefined {
     return this.props.value;
   }
 
@@ -63,10 +68,6 @@ export class Input extends Block<InputProps> {
   }
 
   protected componentDidUpdate(oldProps: InputProps, newProps: InputProps): boolean {
-    if (oldProps.value === newProps.value) {
-      return true;
-    }
-
     const metaKeys: Array<keyof InputProps> = [
       'isValid',
       'errorMessage',
@@ -75,18 +76,39 @@ export class Input extends Block<InputProps> {
       'label',
       'type',
       'name',
+      'events',
     ];
 
-    return metaKeys.some((key) => oldProps[key] !== newProps[key]);
+    const metaChanged = metaKeys.some((key) => oldProps[key] !== newProps[key]);
+    const valueChanged = oldProps.value !== newProps.value;
+
+    if (this.props.type === 'file' && valueChanged && !metaChanged) {
+      return false;
+    }
+
+    if (valueChanged && !metaChanged && this._isFocused) {
+      return false;
+    }
+
+    return valueChanged || metaChanged;
   }
 
-  public validate(): boolean {
-    const value = this.props.value ?? '';
+  validate(): boolean {
+    const value = typeof this.props.value === 'string' ? this.props.value : '';
     const invalidValidators = this._collectInvalidValidators(value);
     const isValid = invalidValidators.length === 0;
     const message = this._buildErrorMessage(invalidValidators);
     this.setProps({ isValid, errorMessage: message });
     return isValid;
+  }
+
+  clearValueAndValidity(): void {
+    const value = this.props.type === 'file' ? null : '';
+    this.setProps({ value, isValid: true, errorMessage: '' });
+  }
+
+  setErrorMessage(errorMessage: string) {
+    this.setProps({ isValid: false, errorMessage });
   }
 
   private _collectInvalidValidators(value: string): string[] {
@@ -134,21 +156,28 @@ export class Input extends Block<InputProps> {
         ...(this.props.events ?? {}),
         'focus:input': this._handleFocusEvents,
         'input:input': this._handleInputEvents,
+        'change:input': this._handleInputEvents,
         'blur:input': this._handleBlurEvents,
       },
     });
   }
 
   private _handleBlurEvents = (event: Event) => {
-    const { value } = event.target as HTMLInputElement;
-    this.setProps({ value });
+    this._isFocused = false;
+    const input = event.target as HTMLInputElement;
+    const nextValue = this.props.type === 'file' ? input.files : input.value;
+    this.setProps({ value: nextValue });
     this.validate();
   };
 
-  private _handleFocusEvents = (_event: Event) => {};
+  private _handleFocusEvents = (_event: Event) => {
+    this._isFocused = true;
+  };
 
   private _handleInputEvents = (event: Event) => {
-    const { value } = event.target as HTMLInputElement;
-    this.setProps({ value });
+    const input = event.target as HTMLInputElement;
+    const nextValue = this.props.type === 'file' ? input.files : input.value;
+    this.setProps({ value: nextValue });
+    this.props.onChange?.(nextValue);
   };
 }

@@ -8,15 +8,32 @@ enum HTTPMethod {
 type QueryValue = string | number | boolean | null | undefined;
 type QueryData = Record<string, QueryValue>;
 
-type RequestOptions<TData = unknown> = {
+export type RequestOptions<TData = unknown> = {
   method?: HTTPMethod;
   headers?: Record<string, string>;
   data?: TData;
   timeout?: number;
   responseType?: XMLHttpRequestResponseType;
+  withCredentials?: boolean;
 };
 
 export class HTTPTransport {
+  get = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.GET });
+  };
+
+  put = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.PUT });
+  };
+
+  post = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.POST });
+  };
+
+  delete = (url: string, options: RequestOptions = {}) => {
+    return this._request(url, { ...options, method: HTTPMethod.DELETE });
+  };
+
   private _queryStringify = (data: QueryData) => {
     if (typeof data !== 'object') {
       throw new Error('Data must be object');
@@ -41,22 +58,6 @@ export class HTTPTransport {
     return `?${query}`;
   };
 
-  get = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.GET }, options.timeout);
-  };
-
-  put = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.PUT }, options.timeout);
-  };
-
-  post = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.POST }, options.timeout);
-  };
-
-  delete = (url: string, options: RequestOptions = {}) => {
-    return this._request(url, { ...options, method: HTTPMethod.DELETE }, options.timeout);
-  };
-
   private _buildUrl = (url: string, method: HTTPMethod, data: unknown) => {
     if (method === HTTPMethod.GET && data && typeof data === 'object') {
       return url + this._queryStringify(data as QueryData);
@@ -75,7 +76,7 @@ export class HTTPTransport {
     headers: Record<string, string>,
     xhr: XMLHttpRequest,
   ): XMLHttpRequestBodyInit | Document | null => {
-    if (method === HTTPMethod.GET || data === null) {
+    if (method === HTTPMethod.GET || data === null || data === undefined) {
       return null;
     }
 
@@ -97,8 +98,15 @@ export class HTTPTransport {
     throw new Error('Unsupported data type');
   };
 
-  private _request = (url: string, options: RequestOptions = {}, timeout = 5000) => {
-    const { method = HTTPMethod.GET, headers = {}, data, responseType } = options;
+  private _request = (url: string, options: RequestOptions = {}) => {
+    const {
+      method = HTTPMethod.GET,
+      headers = {},
+      data,
+      responseType,
+      withCredentials = true,
+      timeout = 5000,
+    } = options;
 
     return new Promise<XMLHttpRequest>((resolve, reject) => {
       if (!Object.values(HTTPMethod).includes(method)) {
@@ -111,6 +119,7 @@ export class HTTPTransport {
 
       xhr.open(method, newUrl);
       xhr.timeout = timeout;
+      xhr.withCredentials = withCredentials;
       if (responseType) {
         xhr.responseType = responseType;
       }

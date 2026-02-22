@@ -1,0 +1,43 @@
+.messenger {
+    &__chat-body {
+        flex: 1;
+        padding: 16px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
+    }
+
+    &__message {
+        max-width: 70%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        line-height: 1.4;
+        background: var(--color-surface-message);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        &_incoming {
+            align-self: flex-start;
+            color: var(--color-text-primary);
+        }
+
+        &_outgoing {
+            align-self: flex-end;
+            background: var(--color-surface-message-outgoing);
+            color: var(--color-text-dark);
+        }
+    }
+
+    &__message-text {
+        margin: 0;
+    }
+
+    &__message-time {
+        font-size: 11px;
+        color: var(--color-text-subtle);
+        align-self: flex-end;
+    }
+}
